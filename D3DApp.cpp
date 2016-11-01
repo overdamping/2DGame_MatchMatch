@@ -128,8 +128,6 @@ int CD3DApp::Run()
 		{
 			if(FAILED(Render3D()))
 				break;
-
-			//flipping
 			m_pd3dDevice->Present(0, 0, 0, 0);
 		}
 	}
@@ -149,7 +147,6 @@ void CD3DApp::CleanUp()
 	SAFE_RELEASE(m_pd3dSprite);
 	SAFE_RELEASE(m_pd3dDevice);
 	SAFE_RELEASE(m_pD3D);
-
 }
 
 int CD3DApp::Render3D()

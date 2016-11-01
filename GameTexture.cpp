@@ -4,8 +4,9 @@
 #pragma once
 #include "StdAfx.h"
 
-CGameTexture::CGameTexture() : m_pTx(nullptr)
+CGameTexture::CGameTexture()
 {
+	m_pTx = nullptr;
 	memset(&m_Img, 0, sizeof(m_Img));
 }
 

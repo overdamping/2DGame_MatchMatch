@@ -107,10 +107,6 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch(msg)
 	{
-		case WM_PAINT:
-		{
-			break;
-		}
 	}
 
 	return CD3DApp::MsgProc(hWnd, msg, wParam, lParam);

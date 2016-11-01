@@ -7,7 +7,7 @@
 CScoreBoard::CScoreBoard()
 {
 	m_score = 0;
-	::SetRect(&m_boardRect, 600, 29, 800, 29 + 30);
+	::SetRect(&m_boardRect, 585, 29, 800, 29 + 30);
 }
 
 
@@ -19,7 +19,7 @@ int CScoreBoard::Render()
 {
 	char strBuff[80];
 	char scrBuff[20];
-	strcpy_s(strBuff, "Found : ");
+	strcpy_s(strBuff, "Found Pairs: ");
 	_itoa_s(m_score, scrBuff, 20, 10);
 	strcat_s(strBuff, scrBuff);
 
@@ -39,5 +39,5 @@ int CScoreBoard::GetGameScore() const
 
 void CScoreBoard::ScoreIncrease()
 {
-	m_score += 2;
+	m_score += 1;
 }

@@ -19,25 +19,6 @@ int CGamePlay::Init()
 	//Texture creation
 	if (FAILED(m_texBackground.Create(GDEVICE, "Texture/wood_texture.bmp")))
 		return -1;
-	
-	//if (FAILED(m_texCard[0].Create(GDEVICE, "Texture/ace.png")))
-	//	return -1;
-	//if (FAILED(m_texCard[1].Create(GDEVICE, "Texture/castle.png")))
-	//	return -1;
-	//if (FAILED(m_texCard[2].Create(GDEVICE, "Texture/fishing.png")))
-	//	return -1;
-	//if (FAILED(m_texCard[3].Create(GDEVICE, "Texture/horus.png")))
-	//	return -1;
-	//if (FAILED(m_texCard[4].Create(GDEVICE, "Texture/key.png")))
-	//	return -1;
-	//if (FAILED(m_texCard[5].Create(GDEVICE, "Texture/rocket.png")))
-	//	return -1;
-	//if (FAILED(m_texCard[6].Create(GDEVICE, "Texture/sniffing-dog.png")))
-	//	return -1;
-	//if (FAILED(m_texCard[7].Create(GDEVICE, "Texture/wolf-head.png")))
-	//	return -1;
-	//if (FAILED(m_texCard[8].Create(GDEVICE, "Texture/backFace.png")))
-	//	return -1;
 
 	m_texCard[0].Create(GDEVICE, "Texture/ace.png");
 	m_texCard[1].Create(GDEVICE, "Texture/castle.png");
@@ -158,7 +139,7 @@ int CGamePlay::Update()
 	}
 
 	//Game End : All card pairs ard founded
-	if (m_pGameScore->GetGameScore() == 16)
+	if (m_pGameScore->GetGameScore() == 8)
 		PostQuitMessage(0);
 
 	return 0;
