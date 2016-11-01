@@ -17,10 +17,11 @@ public:
 public:
 	BOOL foundFlag;
 private:
-	int cardID;
+	int m_cardID;
+	BOOL isFlipped;
 	D3DXVECTOR2 m_cardPos;
 	CGameTexture* m_pFrontFace;
 	CGameTexture* m_pBackFace;
-	BOOL isFlipped;
+	
 };
 

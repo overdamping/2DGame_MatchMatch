@@ -4,7 +4,7 @@
 #pragma once
 #include "Stdafx.h"
 
-CGamePlay::CGamePlay() : m_pGameScore(nullptr)
+CGamePlay::CGamePlay()
 {
 }
 
@@ -33,9 +33,8 @@ int CGamePlay::Init()
 	//Card objects creation
 	CreateCards();
 
-	//Score board creation
-	if (!m_pGameScore)
-		m_pGameScore = new CScoreBoard();
+	//Score board creation 	::SetRect(&m_boardRect, 585, 29, 800, 29 + 30);
+	m_pGameScore.Create(585, 29, 215, 30);
 
 	//setting indices
 	ndxFirstClk = -1;
@@ -68,7 +67,6 @@ void CGamePlay::CreateCards()
 
 void CGamePlay::Destroy()
 {
-	SAFE_DELEETE(m_pGameScore);
 }
 
 int CGamePlay::Render()
@@ -85,7 +83,7 @@ int CGamePlay::Render()
 		}
 
 		//Game Score rendering
-		if (FAILED(m_pGameScore->Render()))
+		if (FAILED(m_pGameScore.Render()))
 			return -1;
 
 	return 0;
@@ -127,7 +125,7 @@ int CGamePlay::Update()
 		{
 			m_cards[ndxFirstClk].foundFlag = TRUE;
 			m_cards[ndxSecondClk].foundFlag = TRUE;
-			m_pGameScore->ScoreIncrease();
+			m_pGameScore.ScoreIncrease();
 		}
 		else
 		{
@@ -139,7 +137,7 @@ int CGamePlay::Update()
 	}
 
 	//Game End : All card pairs ard founded
-	if (m_pGameScore->GetGameScore() == 8)
+	if (m_pGameScore.GetGameScore() == 8)
 		PostQuitMessage(0);
 
 	return 0;

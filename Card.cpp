@@ -17,7 +17,7 @@ CCard::~CCard()
 int CCard::Create(int id, float posX, float posY, CGameTexture* pFrontFace, CGameTexture* pBackFace)
 {
 	//Setting card ID
-	cardID = id;
+	m_cardID = id;
 
 	//Setting card position
 	m_cardPos.x = posX;
@@ -33,7 +33,7 @@ int CCard::Create(int id, float posX, float posY, CGameTexture* pFrontFace, CGam
 	m_pBackFace = pBackFace;
 
 	//Initialy, all cards ard flipped(showing backface)
-	isFlipped = TRUE;
+	isFlipped = FALSE;
 	foundFlag = FALSE;
 
 	return 0;
@@ -80,7 +80,7 @@ BOOL CCard::Equals(const CCard * pCard) const
 {
 	if (pCard)
 	{
-		return (this->cardID == pCard->cardID);
+		return (this->m_cardID == pCard->m_cardID);
 	}
 	return FALSE;
 }

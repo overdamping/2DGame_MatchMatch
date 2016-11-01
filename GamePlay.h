@@ -27,7 +27,7 @@ private:
 	CGameTexture			m_texBackground;	//Background texture
 	CGameTexture			m_texCard[9];		//Card textures
 	CCard					m_cards[16];		//Card objects
-	CScoreBoard*			m_pGameScore;		//Game Score board
+	CScoreBoard			m_pGameScore;		//Game Score board
 
 	//indices for pair matching
 	int ndxFirstClk;
