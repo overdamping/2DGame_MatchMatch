@@ -17,7 +17,7 @@ public:
 
 	virtual LRESULT MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 private:
-	CGameScene*		m_pGameScene;
+	IGameScene*		m_pGameScene;
 	LPD3DXFONT		m_pFont;
 	CGameSprite*	m_pSprite;
 	CGameInput*		m_pGameInput;

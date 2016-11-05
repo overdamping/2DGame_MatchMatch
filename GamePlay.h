@@ -4,17 +4,17 @@
 #pragma once
 #include "GameScene.h"
 
-class CGamePlay : public CGameScene
+class CGamePlay : public IGameScene
 {
 public:
 	CGamePlay();
-	virtual ~CGamePlay();
+	~CGamePlay();
 
-	virtual int Init();
-	virtual void Destroy();
+	int Init();
+	void Destroy();
 
-	virtual int Update();
-	virtual int Render();
+	int Update();
+	int Render();
 private:
 	void CreateCards();
 

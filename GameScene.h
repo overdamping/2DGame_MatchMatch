@@ -3,11 +3,11 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-class CGameScene
+class IGameScene
 {
 public:
-	CGameScene() {};
-	virtual ~CGameScene() {};
+	IGameScene() {};
+	virtual ~IGameScene() {};
 
 	virtual int Init() = 0;
 	virtual void Destroy() = 0;
