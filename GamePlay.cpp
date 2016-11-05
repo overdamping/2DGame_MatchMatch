@@ -34,7 +34,7 @@ int CGamePlay::Init()
 	CreateCards();
 
 	//Score board creation 	::SetRect(&m_boardRect, 585, 29, 800, 29 + 30);
-	m_pGameScore.Create(585, 29, 215, 30);
+	m_gameScore.Create(585, 29, 215, 30);
 
 	//setting indices
 	ndxFirstClk = -1;
@@ -85,7 +85,7 @@ int CGamePlay::Render()
 		}
 
 		//Game Score rendering
-		if (FAILED(m_pGameScore.Render()))
+		if (FAILED(m_gameScore.Render()))
 			return -1;
 
 	return 0;
@@ -127,7 +127,7 @@ int CGamePlay::Update()
 		{
 			m_cards[ndxFirstClk].isfound = TRUE;
 			m_cards[ndxSecondClk].isfound = TRUE;
-			m_pGameScore.ScoreIncrease();
+			m_gameScore.ScoreIncrease();
 		}
 		else
 		{
@@ -139,7 +139,7 @@ int CGamePlay::Update()
 	}
 
 	//Game End : All card pairs ard founded
-	if (m_pGameScore.GetGameScore() == 8)
+	if (m_gameScore.GetGameScore() == 8)
 		PostQuitMessage(0);
 
 	return 0;
