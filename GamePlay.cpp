@@ -60,6 +60,8 @@ void CGamePlay::CreateCards()
 		m_cards[i].Create(tempNew[i],
 			29 + (i / 4)*(interval + cardWidth),
 			29 + (i % 4)*(interval + cardHeight),
+			cardWidth,
+			cardHeight,
 			&m_texCard[tempNew[i]],
 			&m_texCard[8]);
 	}
@@ -96,12 +98,12 @@ int CGamePlay::Update()
 	{
 		for (int ndx = 0; ndx < 16; ndx++)
 		{
-			if (GINPUT->IsClicked(m_cards[ndx].GetCardRect()) && !m_cards[ndx].foundFlag)
+			if (GINPUT->IsClicked(m_cards[ndx].GetCardRect()) && !m_cards[ndx].isfound)
 			{
 				if (ndxFirstClk == -1)								//First card clicked
 				{
 					ndxFirstClk = ndx;
-					m_cards[ndxFirstClk].FlipCard();
+					m_cards[ndxFirstClk].isFlipped = FALSE;
 					return 0;
 				}
 				else 							
@@ -109,7 +111,7 @@ int CGamePlay::Update()
 					if (ndxSecondClk == -1 && ndx != ndxFirstClk)	//Second card clicked
 					{
 						ndxSecondClk = ndx;
-						m_cards[ndxSecondClk].FlipCard();
+						m_cards[ndxSecondClk].isFlipped = FALSE;
 						return 0;
 					}
 				}
@@ -123,14 +125,14 @@ int CGamePlay::Update()
 		Sleep(200);
 		if (m_cards[ndxFirstClk].Equals(&m_cards[ndxSecondClk]))
 		{
-			m_cards[ndxFirstClk].foundFlag = TRUE;
-			m_cards[ndxSecondClk].foundFlag = TRUE;
+			m_cards[ndxFirstClk].isfound = TRUE;
+			m_cards[ndxSecondClk].isfound = TRUE;
 			m_pGameScore.ScoreIncrease();
 		}
 		else
 		{
-			m_cards[ndxFirstClk].FlipCard();
-			m_cards[ndxSecondClk].FlipCard();
+			m_cards[ndxFirstClk].isFlipped = TRUE;
+			m_cards[ndxSecondClk].isFlipped = TRUE;
 		}
 		ndxFirstClk = -1;
 		ndxSecondClk = -1;

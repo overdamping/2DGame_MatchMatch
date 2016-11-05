@@ -14,7 +14,7 @@ CCard::~CCard()
 	Destroy();
 }
 
-int CCard::Create(int id, float posX, float posY, CGameTexture* pFrontFace, CGameTexture* pBackFace)
+int CCard::Create(int id, float posX, float posY, float width, float height, CGameTexture* pFrontFace, CGameTexture* pBackFace)
 {
 	//Setting card ID
 	m_cardID = id;
@@ -22,6 +22,9 @@ int CCard::Create(int id, float posX, float posY, CGameTexture* pFrontFace, CGam
 	//Setting card position
 	m_cardPos.x = posX;
 	m_cardPos.y = posY;
+
+	//Setting card rectangle
+	::SetRect(&m_cardRect, posX, posY, posX+width, posY+height);
 
 	//Assign card textures
 	if (!pFrontFace)
@@ -33,8 +36,8 @@ int CCard::Create(int id, float posX, float posY, CGameTexture* pFrontFace, CGam
 	m_pBackFace = pBackFace;
 
 	//Initialy, all cards ard flipped(showing backface)
-	isFlipped = FALSE;
-	foundFlag = FALSE;
+	isFlipped = TRUE;
+	isfound = FALSE;
 
 	return 0;
 }
@@ -43,13 +46,12 @@ int CCard::Render()
 {	
 	if (!m_pFrontFace || !m_pBackFace)
 		return -1;
-
+	
 	RECT rc = m_pFrontFace->GetImageRect();
 	if (!isFlipped)
 		GSPRITE->Draw(m_pFrontFace->GetTexture(), &rc, nullptr, 0, &m_cardPos, nullptr, D3DXCOLOR(1, 1, 1, 1));
 	else
 		GSPRITE->Draw(m_pBackFace->GetTexture(), &rc, nullptr, 0, &m_cardPos, nullptr, D3DXCOLOR(1, 1, 1, 1));
-
 	return 0;
 }
 
@@ -59,21 +61,9 @@ void CCard::Destroy()
 	m_pBackFace = nullptr;
 }
 
-RECT CCard::GetCardRect()
+RECT CCard::GetCardRect() const
 {
-	RECT rc = m_pFrontFace->GetImageRect();
-
-	rc.left += m_cardPos.x;
-	rc.right += m_cardPos.x;
-	rc.top += m_cardPos.y;
-	rc.bottom += m_cardPos.y;
-
-	return rc;
-}
-
-void CCard::FlipCard()
-{
-	isFlipped = !isFlipped;
+	return m_cardRect;
 }
 
 BOOL CCard::Equals(const CCard * pCard) const

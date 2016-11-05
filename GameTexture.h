@@ -16,6 +16,7 @@ public:
 	int GetImageHeight() const;
 	RECT GetImageRect();
 	LPDIRECT3DTEXTURE9 GetTexture();
+
 private:
 	D3DXIMAGE_INFO			m_Img;
 	LPDIRECT3DTEXTURE9		m_pTx;

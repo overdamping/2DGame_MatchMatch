@@ -16,12 +16,7 @@ CScoreBoard::~CScoreBoard()
 int CScoreBoard::Create(float posX, float posY, float width, float height)
 {
 	m_score = 0;
-
-	m_boardRect.left = posX;
-	m_boardRect.right = posX+width;
-	m_boardRect.top = posY;
-	m_boardRect.bottom = posY+height;
-
+	::SetRect(&m_boardRect, posX, posY, posX + width, posY + height);
 	return 0;
 }
 
