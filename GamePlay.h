@@ -13,6 +13,7 @@ public:
 	int Init();
 	void Destroy();
 
+	int ProcessInput();
 	int Update();
 	int Render();
 private:
@@ -32,5 +33,8 @@ private:
 	//indices for pair matching
 	int ndxFirstClk;
 	int ndxSecondClk;
+
+	float m_fTimeBgn;
+	float m_fTimeEnd;
 };
 

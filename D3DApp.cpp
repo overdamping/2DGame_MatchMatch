@@ -178,7 +178,6 @@ LRESULT CD3DApp::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 		return 0;
-
 	case WM_DESTROY:
 		CleanUp();
 		PostQuitMessage(0);

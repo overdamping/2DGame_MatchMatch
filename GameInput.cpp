@@ -23,38 +23,31 @@ int CGameInput::Init()
 	return 0;
 }
 
-int CGameInput::Update()
-{
-	SetMousePos();
-	return 0;
-}
-
-void CGameInput::SetMousePos()
+void CGameInput::SetMousePos(int posX, int posY)
 {
 	memcpy(&m_mousePosOld, &m_mousePosCur, sizeof(m_mousePosCur));
-
-	POINT mouse;
-	::GetCursorPos(&mouse);
-	::ScreenToClient(::GetActiveWindow(), &mouse);
-
-	m_mousePosCur.x = float(mouse.x);
-	m_mousePosCur.y = float(mouse.y);
+	m_mousePosCur.x = posX;
+	m_mousePosCur.y = posY;
 }
 
-BOOL CGameInput::IsClicked(RECT area)
+BOOL CGameInput::LButtonClicked() const
 {
-	return ((m_mousePosCur.x>area.left)
-		&&(m_mousePosCur.x<area.right)
-		&&(m_mousePosCur.y<area.bottom)
-		&&(m_mousePosCur.y>area.top));
+	return (m_fTimeEnd - m_fTimeBgn <= 0.2 || m_mousePosCur == m_mousePosOld);
+}
+
+void CGameInput::LButtonDown(int posX, int posY)
+{
+	SetMousePos(posX, posY);
+	m_fTimeBgn = timeGetTime() * 0.001f;
+}
+
+void CGameInput::LButtonUp(int posX, int posY)
+{
+	SetMousePos(posX, posY);
+	m_fTimeEnd = timeGetTime() * 0.001f;
 }
 
 D3DXVECTOR3 CGameInput::GetCurMousePos() const
 {
 	return m_mousePosCur;
-}
-
-BOOL CGameInput::IsPressed(int vKey)
-{
-	return (GetAsyncKeyState(vKey) & 0x0001 == TRUE);
 }

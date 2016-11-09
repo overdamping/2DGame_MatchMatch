@@ -65,13 +65,13 @@ void CMain::Destroy()
 
 int CMain::Update()
 {
-	if (!m_pGameInput)
-		return -1;
+	//if (!m_pGameInput)
+	//	return -1;
 	
 	if (!m_pGameScene)
 		return -1;
 	
-	m_pGameInput->Update();
+	//m_pGameInput->Update();
 	m_pGameScene->Update();
 
 	return 0;
@@ -107,6 +107,17 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch(msg)
 	{
+		if (GINPUT) {
+			case WM_LBUTTONDOWN:
+				GINPUT->LButtonDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+				return 0;
+			case WM_LBUTTONUP:
+				GINPUT->LButtonUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+				if (GINPUT->LButtonClicked())
+					m_pGameScene->ProcessInput();
+				return 0;
+		}
+		return 0;
 	}
 
 	return CD3DApp::MsgProc(hWnd, msg, wParam, lParam);

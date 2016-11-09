@@ -10,18 +10,21 @@ public:
 	~CGameInput();
 
 	int Init();
-	int Update();
 public:
 	D3DXVECTOR3 GetCurMousePos() const;
-	BOOL IsPressed(int vKey);
-	BOOL IsClicked(RECT area);
+
+	void LButtonDown(int posX, int posY);
+	void LButtonUp(int posX, int posY);
+	BOOL LButtonClicked() const;
 private:
-	void SetMousePos();
+	void SetMousePos(int posX, int posY);
 
 private:
 	D3DXVECTOR3 m_mousePosCur;
 	D3DXVECTOR3 m_mousePosOld;
 
+	float m_fTimeBgn;
+	float m_fTimeEnd;
 };
 
 extern CGameInput* g_pGameInput;

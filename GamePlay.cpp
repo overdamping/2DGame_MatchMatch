@@ -91,51 +91,56 @@ int CGamePlay::Render()
 	return 0;
 }
 
-int CGamePlay::Update()
+int CGamePlay::ProcessInput()
 {
-	//Input processing
-	if (GINPUT->IsPressed(VK_LBUTTON))
+	D3DXVECTOR3 pos = GINPUT->GetCurMousePos();
+	POINT pt = { (LONG)pos.x,(LONG)pos.y };
+
+	for (int ndx = 0; ndx < 16; ndx++)
 	{
-		for (int ndx = 0; ndx < 16; ndx++)
+		if (PtInRect(&m_cards[ndx].GetCardRect(), pt) && !m_cards[ndx].isfound)
 		{
-			if (GINPUT->IsClicked(m_cards[ndx].GetCardRect()) && !m_cards[ndx].isfound)
+			if (ndxFirstClk == -1)								//First card clicked
 			{
-				if (ndxFirstClk == -1)								//First card clicked
+				ndxFirstClk = ndx;
+				m_cards[ndxFirstClk].isFlipped = FALSE;
+				return 0;
+			}
+			else
+				if (ndxSecondClk == -1 && ndx != ndxFirstClk)	//Second card clicked
 				{
-					ndxFirstClk = ndx;
-					m_cards[ndxFirstClk].isFlipped = FALSE;
+					ndxSecondClk = ndx;
+					m_cards[ndxSecondClk].isFlipped = FALSE;
+					m_fTimeBgn = timeGetTime() * 0.001f;
 					return 0;
 				}
-				else 							
-				{
-					if (ndxSecondClk == -1 && ndx != ndxFirstClk)	//Second card clicked
-					{
-						ndxSecondClk = ndx;
-						m_cards[ndxSecondClk].isFlipped = FALSE;
-						return 0;
-					}
-				}
-			}
 		}
 	}
-	
+	return 0;
+}
+
+int CGamePlay::Update()
+{
 	//Card pair matching
 	if (ndxSecondClk != -1)
 	{
-		Sleep(200);
-		if (m_cards[ndxFirstClk].Equals(&m_cards[ndxSecondClk]))
+		m_fTimeEnd = timeGetTime() * 0.001f;
+		if (m_fTimeEnd - m_fTimeBgn >= 0.2)			//Delay for 0.2sec after second card clicked
 		{
-			m_cards[ndxFirstClk].isfound = TRUE;
-			m_cards[ndxSecondClk].isfound = TRUE;
-			m_gameScore.ScoreIncrease();
+			if (m_cards[ndxFirstClk].Equals(&m_cards[ndxSecondClk]))
+			{
+				m_cards[ndxFirstClk].isfound = TRUE;
+				m_cards[ndxSecondClk].isfound = TRUE;
+				m_gameScore.ScoreIncrease();
+			}
+			else
+			{
+				m_cards[ndxFirstClk].isFlipped = TRUE;
+				m_cards[ndxSecondClk].isFlipped = TRUE;
+			}
+			ndxFirstClk = -1;
+			ndxSecondClk = -1;
 		}
-		else
-		{
-			m_cards[ndxFirstClk].isFlipped = TRUE;
-			m_cards[ndxSecondClk].isFlipped = TRUE;
-		}
-		ndxFirstClk = -1;
-		ndxSecondClk = -1;
 	}
 
 	//Game End : All card pairs ard founded
