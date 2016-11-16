@@ -23,6 +23,8 @@
 #include "GamePlay.h"
 #include "Main.h"
 
+#define SCREEN_WIDTH		800
+#define	SCREEN_HEIGHT		600
 
 #define GDEVICE				g_pApp->GetDevice()
 #define GSPRITE				g_pApp->GetSprite()

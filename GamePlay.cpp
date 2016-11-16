@@ -33,7 +33,7 @@ int CGamePlay::Init()
 	//Card objects creation
 	CreateCards();
 
-	//Score board creation 	::SetRect(&m_boardRect, 585, 29, 800, 29 + 30);
+	//Score board creation
 	m_gameScore.Create(585, 29, 215, 30);
 
 	//setting indices

@@ -28,8 +28,6 @@ protected:
 	HINSTANCE			m_hInst;
 	HWND				m_hWnd;
 	DWORD				m_dWinStyle;
-	DWORD				m_dScnX;
-	DWORD				m_dScnY;
 
 	LPDIRECT3D9			m_pD3D;
 	LPDIRECT3DDEVICE9	m_pd3dDevice;

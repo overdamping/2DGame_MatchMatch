@@ -21,6 +21,7 @@ private:
 	LPD3DXFONT		m_pFont;
 	CGameSprite*	m_pSprite;
 	CGameInput*		m_pGameInput;
+	CCamera*		m_pCamera;
 public:
 	CGameSprite*	GetSprite() { return m_pSprite; }
 	LPD3DXFONT		GetDXFont() { return m_pFont;   }

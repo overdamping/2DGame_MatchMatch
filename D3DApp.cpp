@@ -14,8 +14,6 @@ CD3DApp::CD3DApp()
 	m_hInst			= NULL;
 	m_hWnd			= NULL;
 	m_dWinStyle		= WS_OVERLAPPEDWINDOW | WS_VISIBLE;
-	m_dScnX			= 800;
-	m_dScnY			= 600;
 
 	m_pD3D			= nullptr;			// D3D
 	m_pd3dDevice	= nullptr;			// Device
@@ -49,7 +47,7 @@ HRESULT CD3DApp::Create(HINSTANCE hInst)
 
 	//Create the application's window
 	RECT rc;
-	SetRect(&rc, 0, 0, m_dScnX, m_dScnY);
+	SetRect(&rc, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	AdjustWindowRect(&rc, m_dWinStyle, FALSE);
 
 	int iScnDydW = ::GetSystemMetrics(SM_CXSCREEN);

@@ -4,7 +4,7 @@
 #pragma once
 #include "StdAfx.h"
 
-CMain::CMain() :m_pSprite(nullptr), m_pFont(nullptr), m_pGameScene(nullptr), m_pGameInput(nullptr)
+CMain::CMain() :m_pSprite(nullptr), m_pFont(nullptr), m_pGameScene(nullptr), m_pGameInput(nullptr), m_pCamera(nullptr)
 {
 }
 
@@ -31,6 +31,20 @@ int CMain::Init()
 			return -1;
 	}
 
+	if (!m_pGameInput)
+	{
+		m_pGameInput = new CGameInput();
+		if (FAILED(m_pGameInput->Init()))
+			return -1;
+	}
+
+	if (!m_pCamera)
+	{
+		m_pCamera = new CCamera();
+		if (FAILED(m_pCamera->Create(m_pd3dDevice)))
+			return -1;
+	}
+
 	D3DXFONT_DESC desc;
 	desc.CharSet = HANGUL_CHARSET;
 	desc.Height = 28;
@@ -42,15 +56,13 @@ int CMain::Init()
 	desc.OutputPrecision = OUT_DEFAULT_PRECIS;
 	desc.PitchAndFamily = FF_DONTCARE;
 
-	if(FAILED(D3DXCreateFontIndirect(m_pd3dDevice, &desc, &m_pFont)))
+	if (FAILED(D3DXCreateFontIndirect(m_pd3dDevice, &desc, &m_pFont)))
 		return -1;
 
-	if (!m_pGameInput)
-	{
-		m_pGameInput = new CGameInput();
-		if (FAILED(m_pGameInput->Init()))
-			return -1;
-	}
+	//Turn off advanced 3D lighting
+	m_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	//Disable z-buffering
+	m_pd3dDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
 
 	return 0;
 }
@@ -61,15 +73,19 @@ void CMain::Destroy()
 	SAFE_RELEASE(m_pFont);
 	SAFE_DELEETE(m_pSprite);
 	SAFE_DELEETE(m_pGameInput);
+	SAFE_DELEETE(m_pCamera);
 }
 
 int CMain::Update()
 {
 	//if (!m_pGameInput)
 	//	return -1;
-	
 	if (!m_pGameScene)
 		return -1;
+
+	//if (!m_pCamera)
+	//	return -1;
+	//m_pCamera->Update();
 	
 	//m_pGameInput->Update();
 	m_pGameScene->Update();
@@ -81,6 +97,11 @@ int CMain::Render()
 {
 	//Clear the buffer
 	m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,120,160), 1.0f, 0);
+
+	D3DXMATRIX mt;
+	m_pCamera->GetViewMatrix(&mt);
+	m_pd3dDevice->SetTransform(D3DTS_VIEW, &mt);
+	m_pd3dDevice->SetFVF(CUSTOMFVF);
 
 	//Begin the Scene
 	if(FAILED(m_pd3dDevice->BeginScene()))
