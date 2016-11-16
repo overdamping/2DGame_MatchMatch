@@ -16,6 +16,7 @@
 #include "GameSprite.h"
 #include "GameTexture.h"
 #include "GameInput.h"
+#include "CCamera.h"
 #include "Card.h"
 #include "ScoreBoard.h"
 #include "GameScene.h"
