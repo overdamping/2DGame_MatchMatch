@@ -20,10 +20,9 @@ private:
 	void CreateCards();
 
 private:
-	//Game grid information
-	float interval = 10;
-	float cardWidth = 128;
-	float cardHeight = 128;
+	//float interval = 10;
+	//float cardWidth = 128;
+	//float cardHeight = 128;
 
 	CGameTexture			m_texBackground;	//Background texture
 	CGameTexture			m_texCard[9];		//Card textures

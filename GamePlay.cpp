@@ -58,10 +58,8 @@ void CGamePlay::CreateCards()
 	for (int i = 0; i<16; i++)
 	{
 		m_cards[i].Create(tempNew[i],
-			29 + (i / 4)*(interval + cardWidth),
-			29 + (i % 4)*(interval + cardHeight),
-			cardWidth,
-			cardHeight,
+			-2.3 + (i / 4)*(INTERVAL + CARD_WIDTH),
+			-2 + (i % 4)*(INTERVAL + CARD_HEIGHT),
 			&m_texCard[tempNew[i]],
 			&m_texCard[8]);
 	}
@@ -93,29 +91,29 @@ int CGamePlay::Render()
 
 int CGamePlay::ProcessInput()
 {
-	D3DXVECTOR3 pos = GINPUT->GetCurMousePos();
-	POINT pt = { (LONG)pos.x,(LONG)pos.y };
+	//D3DXVECTOR3 pos = GINPUT->GetCurMousePos();
+	//POINT pt = { (LONG)pos.x,(LONG)pos.y };
 
-	for (int ndx = 0; ndx < 16; ndx++)
-	{
-		if (PtInRect(&m_cards[ndx].GetCardRect(), pt) && !m_cards[ndx].isfound)
-		{
-			if (ndxFirstClk == -1)								//First card clicked
-			{
-				ndxFirstClk = ndx;
-				m_cards[ndxFirstClk].isFlipped = FALSE;
-				return 0;
-			}
-			else
-				if (ndxSecondClk == -1 && ndx != ndxFirstClk)	//Second card clicked
-				{
-					ndxSecondClk = ndx;
-					m_cards[ndxSecondClk].isFlipped = FALSE;
-					m_fTimeBgn = timeGetTime() * 0.001f;
-					return 0;
-				}
-		}
-	}
+	//for (int ndx = 0; ndx < 16; ndx++)
+	//{
+	//	if (PtInRect(&m_cards[ndx].GetCardRect(), pt) && !m_cards[ndx].isfound)
+	//	{
+	//		if (ndxFirstClk == -1)								//First card clicked
+	//		{
+	//			ndxFirstClk = ndx;
+	//			m_cards[ndxFirstClk].isFlipped = FALSE;
+	//			return 0;
+	//		}
+	//		else
+	//			if (ndxSecondClk == -1 && ndx != ndxFirstClk)	//Second card clicked
+	//			{
+	//				ndxSecondClk = ndx;
+	//				m_cards[ndxSecondClk].isFlipped = FALSE;
+	//				m_fTimeBgn = timeGetTime() * 0.001f;
+	//				return 0;
+	//			}
+	//	}
+	//}
 	return 0;
 }
 

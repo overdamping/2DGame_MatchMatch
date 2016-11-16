@@ -26,6 +26,11 @@
 #define SCREEN_WIDTH		800
 #define	SCREEN_HEIGHT		600
 
+////Game grid information
+#define	INTERVAL			0.3f
+#define CARD_WIDTH			1.6f
+#define CARD_HEIGHT			1.6f
+
 #define GDEVICE				g_pApp->GetDevice()
 #define GSPRITE				g_pApp->GetSprite()
 #define GINPUT				g_pGameInput

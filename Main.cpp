@@ -62,7 +62,9 @@ int CMain::Init()
 	//Turn off advanced 3D lighting
 	m_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	//Disable z-buffering
+	m_pd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pd3dDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
+	m_pd3dDevice->SetFVF(CUSTOMFVF);
 
 	return 0;
 }
@@ -83,9 +85,9 @@ int CMain::Update()
 	if (!m_pGameScene)
 		return -1;
 
-	//if (!m_pCamera)
-	//	return -1;
-	//m_pCamera->Update();
+	if (!m_pCamera)
+		return -1;
+	m_pCamera->Update();
 	
 	//m_pGameInput->Update();
 	m_pGameScene->Update();
@@ -96,12 +98,11 @@ int CMain::Update()
 int CMain::Render()
 {
 	//Clear the buffer
-	m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,120,160), 1.0f, 0);
+	m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
 	D3DXMATRIX mt;
 	m_pCamera->GetViewMatrix(&mt);
 	m_pd3dDevice->SetTransform(D3DTS_VIEW, &mt);
-	m_pd3dDevice->SetFVF(CUSTOMFVF);
 
 	//Begin the Scene
 	if(FAILED(m_pd3dDevice->BeginScene()))
