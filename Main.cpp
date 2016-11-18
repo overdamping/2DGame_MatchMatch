@@ -16,7 +16,6 @@ CMain::~CMain()
 
 int CMain::Init()
 {
-	//create and initialize game scene
 	if (!m_pGameScene)
 	{
 		m_pGameScene = new CGamePlay();
@@ -59,11 +58,10 @@ int CMain::Init()
 	if (FAILED(D3DXCreateFontIndirect(m_pd3dDevice, &desc, &m_pFont)))
 		return -1;
 
-	//Turn off advanced 3D lighting
-	m_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	//Disable z-buffering
-	m_pd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_pd3dDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
+	m_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);			//turn off advanced 3D lighting
+	m_pd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);		//turn off culling (render both sides of each polygon)
+	m_pd3dDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);		//disable z-buffering
+
 	m_pd3dDevice->SetFVF(CUSTOMFVF);
 
 	return 0;
@@ -80,17 +78,13 @@ void CMain::Destroy()
 
 int CMain::Update()
 {
-	//if (!m_pGameInput)
-	//	return -1;
 	if (!m_pGameScene)
 		return -1;
+	m_pGameScene->Update();
 
 	if (!m_pCamera)
 		return -1;
 	m_pCamera->Update();
-	
-	//m_pGameInput->Update();
-	m_pGameScene->Update();
 
 	return 0;
 }
@@ -101,8 +95,14 @@ int CMain::Render()
 	m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
 	D3DXMATRIX mt;
-	m_pCamera->GetViewMatrix(&mt);
-	m_pd3dDevice->SetTransform(D3DTS_VIEW, &mt);
+
+	if (m_pCamera)
+	{
+		m_pCamera->GetViewMatrix(&mt);
+		m_pd3dDevice->SetTransform(D3DTS_VIEW, &mt);
+	}
+	else 
+		return -1;
 
 	//Begin the Scene
 	if(FAILED(m_pd3dDevice->BeginScene()))

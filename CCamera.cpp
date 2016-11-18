@@ -20,10 +20,10 @@ INT CCamera::Create(LPDIRECT3DDEVICE9 pDev)
 
 	//setting up the projection transformation
 	D3DXMatrixPerspectiveFovLH(&m_mtPrj,
-		D3DXToRadian(45),							//the horizontal field of view
-		(FLOAT)SCREEN_WIDTH / (FLOAT)SCREEN_HEIGHT,	//aspect ratio
-		1.0f,										//the near view-plane
-		100.0f);									//the far view-plane
+		D3DXToRadian(45),								//the horizontal field of view
+		(FLOAT)SCREEN_WIDTH / (FLOAT)SCREEN_HEIGHT,		//aspect ratio
+		1.0f,											//the near view-plane
+		100.0f);										//the far view-plane
 
 	pDev->SetTransform(D3DTS_PROJECTION, &m_mtPrj);
 
