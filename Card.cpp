@@ -18,21 +18,20 @@ int CCard::Create(int id, float posX, float posY, CGameTexture* pFrontFace, CGam
 {
 	//setting card ID
 	m_cardID = id;
-
+	
 	//assign card textures
 	if (!pFrontFace || !pBackFace)
 		return -1;
 	m_pFrontFace = pFrontFace;
 	m_pBackFace = pBackFace;
 
-	//Initialy, all cards ard flipped(showing backface)
-	isFlipped = TRUE;
-	isfound = FALSE;
-
+	//setting card position
 	card.vertices[0]._pos = D3DXVECTOR3{posX, posY, 0.0f};
 	card.vertices[1]._pos = D3DXVECTOR3{posX+CARD_WIDTH, posY, 0.0f};
 	card.vertices[2]._pos = D3DXVECTOR3{posX, posY-CARD_HEIGHT, 0.0f};
 	card.vertices[3]._pos = D3DXVECTOR3{posX+CARD_WIDTH, posY-CARD_HEIGHT, 0.0f};
+
+	m_cardSt = NOTFOUND_BACK;
 
 	return 0;
 }
@@ -42,10 +41,10 @@ int CCard::Render()
 	if (!m_pFrontFace || !m_pBackFace)
 		return -1;
 
-	if (!isFlipped)
-		GDEVICE->SetTexture(0, m_pFrontFace->GetTexture());
-	else
+	if (m_cardSt == NOTFOUND_BACK)
 		GDEVICE->SetTexture(0, m_pBackFace->GetTexture());
+	else
+		GDEVICE->SetTexture(0, m_pFrontFace->GetTexture());
 
 	GDEVICE->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP,		//primitive type
 		2,												//number of primitives to render
@@ -69,6 +68,27 @@ BOOL CCard::Equals(const CCard * pCard) const
 		return (this->m_cardID == pCard->m_cardID);
 	}
 	return FALSE;
+}
+
+BOOL CCard::IsFound() const
+{
+	return (m_cardSt == FOUND_FRONT);
+}
+
+void CCard::Flip(BOOL st)
+{
+	if (m_cardSt != FOUND_FRONT)
+	{
+		if (st)
+			m_cardSt = NOTFOUND_BACK;
+		else
+			m_cardSt = NOTFOUND_FRONT;
+	}
+}
+
+void CCard::Found()
+{
+	m_cardSt = FOUND_FRONT;
 }
 
 const CUSTOMVERTEX * CCard::GetQuadVertices()

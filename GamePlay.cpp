@@ -96,19 +96,19 @@ int CGamePlay::ProcessInput()							//process mouse input (left button click)
 
 	for (int ndx = 0; ndx < 16; ndx++)
 	{
-		if (RayQuadIntersectionTest(ray, m_cards[ndx].GetQuadVertices()) && !m_cards[ndx].isfound)
+		if (RayQuadIntersectionTest(ray, m_cards[ndx].GetQuadVertices()) && !m_cards[ndx].IsFound())
 		{
 			if (ndxFirstClk == -1)								//first card clicked
 			{
 				ndxFirstClk = ndx;
-				m_cards[ndxFirstClk].isFlipped = FALSE;
+				m_cards[ndxFirstClk].Flip(FALSE);
 				return 0;
 			}
 			else
 				if (ndxSecondClk == -1 && ndx != ndxFirstClk)	//second card clicked
 				{
 					ndxSecondClk = ndx;
-					m_cards[ndxSecondClk].isFlipped = FALSE;
+					m_cards[ndxSecondClk].Flip(FALSE);
 					m_fTimeBgn = timeGetTime() * 0.001f;		
 					return 0;
 				}
@@ -127,14 +127,14 @@ int CGamePlay::Update()
 		{
 			if (m_cards[ndxFirstClk].Equals(&m_cards[ndxSecondClk]))
 			{
-				m_cards[ndxFirstClk].isfound = TRUE;
-				m_cards[ndxSecondClk].isfound = TRUE;
+				m_cards[ndxFirstClk].Found();
+				m_cards[ndxSecondClk].Found();
 				m_gameScore.ScoreIncrease();
 			}
 			else
 			{
-				m_cards[ndxFirstClk].isFlipped = TRUE;
-				m_cards[ndxSecondClk].isFlipped = TRUE;
+				m_cards[ndxFirstClk].Flip(TRUE);
+				m_cards[ndxSecondClk].Flip(TRUE);
 			}
 			ndxFirstClk = -1;
 			ndxSecondClk = -1;

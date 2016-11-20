@@ -1,5 +1,12 @@
 #pragma once
 
+enum ECardState
+{
+	NOTFOUND_FRONT,
+	NOTFOUND_BACK,
+	FOUND_FRONT,
+};
+
 class CCard
 {
 public:
@@ -11,13 +18,15 @@ public:
 	void Destroy();
 public:
 	BOOL Equals(const CCard* card) const;
+	BOOL IsFound() const;
+	void Flip(BOOL st);
+	void Found();
+
 	const CUSTOMVERTEX* GetQuadVertices();
 
-public:
-	BOOL isfound;
-	BOOL isFlipped;
 private:
 	int m_cardID;
+	ECardState m_cardSt;
 	CGameTexture* m_pFrontFace;
 	CGameTexture* m_pBackFace;
 	TexQuad card;
