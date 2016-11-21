@@ -43,9 +43,9 @@ Ray CalcPickingRay(int screen_x, int screen_y)
 	return ray;
 }
 
-bool RayQuadIntersectionTest(Ray r, const CUSTOMVERTEX* quadVertices)
+BOOL RayQuadIntersectionTest(Ray r, const CUSTOMVERTEX* quadVertices)
 {
-	bool res = D3DXIntersectTri(&quadVertices[0]._pos, &quadVertices[1]._pos, &quadVertices[2]._pos, &r._origin, &r._direction, nullptr, nullptr, nullptr);
+	BOOL res = D3DXIntersectTri(&quadVertices[0]._pos, &quadVertices[1]._pos, &quadVertices[2]._pos, &r._origin, &r._direction, nullptr, nullptr, nullptr);
 	res = res || D3DXIntersectTri(&quadVertices[2]._pos, &quadVertices[1]._pos, &quadVertices[3]._pos, &r._origin, &r._direction, nullptr, nullptr, nullptr);
 	
 	return res;

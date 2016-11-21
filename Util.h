@@ -33,4 +33,4 @@ struct TexQuad	//textured quad built from two triangles
 #define SAFE_DELEETE(p)		{if (p) {delete(p);  p = nullptr;}}
 
 Ray CalcPickingRay(int screen_x, int screen_y);
-bool RayQuadIntersectionTest(Ray r,const CUSTOMVERTEX* quadVertices);
+BOOL RayQuadIntersectionTest(Ray r,const CUSTOMVERTEX* quadVertices);
