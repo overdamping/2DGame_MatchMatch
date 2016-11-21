@@ -16,7 +16,7 @@ public:
 	void ScoreIncrease();
 
 private:
-	int m_score;
+	int m_cntAttemps;		
 	RECT m_boardRect;
 };
 

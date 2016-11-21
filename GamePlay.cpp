@@ -40,6 +40,8 @@ int CGamePlay::Init()
 	ndxFirstClk = -1;
 	ndxSecondClk = -1;
 
+	cntMatchedPair = 0;
+
 	return 0;
 }
 
@@ -125,24 +127,25 @@ int CGamePlay::Update()
 		m_fTimeEnd = timeGetTime() * 0.001f;
 		if (m_fTimeEnd - m_fTimeBgn >= 0.2)			//delay for 0.2sec after second card clicked
 		{
-			if (m_cards[ndxFirstClk].Equals(&m_cards[ndxSecondClk]))
+			if (m_cards[ndxFirstClk].Equals(&m_cards[ndxSecondClk]))	//pair matching success
 			{
 				m_cards[ndxFirstClk].Found();
 				m_cards[ndxSecondClk].Found();
-				m_gameScore.ScoreIncrease();
+				cntMatchedPair++;
 			}
-			else
-			{
+			else														//pair matching fail
+			{												
 				m_cards[ndxFirstClk].Flip(TRUE);
 				m_cards[ndxSecondClk].Flip(TRUE);
+				m_gameScore.ScoreIncrease();							//number of attemps incresed
 			}
 			ndxFirstClk = -1;
 			ndxSecondClk = -1;
 		}
 	}
 
-	//Game End : All card pairs ard founded
-	if (m_gameScore.GetGameScore() == 8)
+	//Game End : All card pairs matched
+	if (cntMatchedPair == 8)
 		PostQuitMessage(0);
 
 	return 0;

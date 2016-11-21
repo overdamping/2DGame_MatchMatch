@@ -15,7 +15,7 @@ CScoreBoard::~CScoreBoard()
 
 int CScoreBoard::Create(float posX, float posY, float width, float height)
 {
-	m_score = 0;
+	m_cntAttemps = 0;
 	::SetRect(&m_boardRect, posX, posY, posX + width, posY + height);
 	return 0;
 }
@@ -24,8 +24,8 @@ int CScoreBoard::Render()
 {
 	char strBuff[80];
 	char scrBuff[20];
-	strcpy_s(strBuff, "Found Pairs: ");
-	_itoa_s(m_score, scrBuff, 20, 10);
+	strcpy_s(strBuff, "Attempts: ");
+	_itoa_s(m_cntAttemps, scrBuff, 20, 10);
 	strcat_s(strBuff, scrBuff);
 
 	if (GFONT)
@@ -39,10 +39,10 @@ int CScoreBoard::Render()
 
 int CScoreBoard::GetGameScore() const
 {
-	return m_score;
+	return m_cntAttemps;
 }
 
 void CScoreBoard::ScoreIncrease()
 {
-	m_score += 1;
+	m_cntAttemps++;
 }
