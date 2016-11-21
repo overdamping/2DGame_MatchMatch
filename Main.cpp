@@ -6,6 +6,7 @@
 
 CMain::CMain() :m_pSprite(nullptr), m_pFont(nullptr), m_pGameScene(nullptr), m_pGameInput(nullptr), m_pCamera(nullptr)
 {
+	//m_pMainMenu(nullptr);
 }
 
 
@@ -22,6 +23,15 @@ int CMain::Init()
 		if (FAILED(m_pGameScene->Init()))
 			return -1;
 	}
+
+	/*
+	if (!m_pMainMenu)
+	{
+		m_pMainMenu = new CMainMenu();
+		if (FAILED(m_pMainMenu->Init()))
+			return -1;
+	}
+	*/
 
 	if (!m_pSprite)
 	{
@@ -58,6 +68,11 @@ int CMain::Init()
 	if (FAILED(D3DXCreateFontIndirect(m_pd3dDevice, &desc, &m_pFont)))
 		return -1;
 
+	/*
+	scenes.push(std::unique_ptr<IGameScene>(m_pGameScene));
+	*/
+
+	//setting rendering state
 	m_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);			//turn off advanced 3D lighting
 	m_pd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);		//turn off culling (render both sides of each polygon)
 	m_pd3dDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);		//disable z-buffering
@@ -70,6 +85,7 @@ int CMain::Init()
 void CMain::Destroy()
 {
 	SAFE_DELEETE(m_pGameScene);
+	//safe_delete(m_pMainMenu);
 	SAFE_RELEASE(m_pFont);
 	SAFE_DELEETE(m_pSprite);
 	SAFE_DELEETE(m_pGameInput);
