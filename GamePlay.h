@@ -32,6 +32,6 @@ private:
 	float m_fTimeBgn;
 	float m_fTimeEnd;
 
-	int cntFoundCards;
+	int cntMatchedPair;
 };
 
