@@ -10,6 +10,8 @@
 #include <string.h>
 #include <ctime>
 #include <vector>
+#include <stack>
+#include <memory>
 
 #include "Util.h"
 #include "D3DApp.h"
@@ -21,6 +23,7 @@
 #include "ScoreBoard.h"
 #include "GameScene.h"
 #include "GamePlay.h"
+#include "MainMenu.h"
 #include "Main.h"
 
 #define SCREEN_WIDTH		800
