@@ -99,9 +99,13 @@ void CMain::Destroy()
 
 int CMain::Update()
 {
-	if (!m_pGameScene)
+	//if (!m_pGameScene)
+	//	return -1;
+	//m_pGameScene->Update();
+
+	if (scenes.empty())
 		return -1;
-	m_pGameScene->Update();
+	scenes.top().get()->Update();
 
 	if (!m_pCamera)
 		return -1;
@@ -130,11 +134,22 @@ int CMain::Render()
 		return -1;
 
 	//Game Scene Rendering
+	//if (m_pSprite)
+	//{
+	//	if (m_pGameScene)
+	//	{
+	//		if (FAILED(m_pGameScene->Render()))
+	//			return -1;
+	//	}
+	//}
+	//else
+	//	return -1;
+
 	if (m_pSprite)
 	{
-		if (m_pGameScene)
+		if (!scenes.empty())
 		{
-			if (FAILED(m_pGameScene->Render()))
+			if (FAILED(scenes.top().get()->Render()))
 				return -1;
 		}
 	}
@@ -157,7 +172,8 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			case WM_LBUTTONUP:
 				GINPUT->LButtonUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 				if (GINPUT->LButtonClicked())
-					m_pGameScene->ProcessInput();
+					//m_pGameScene->ProcessInput();
+					scenes.top().get()->ProcessInput();
 				return 0;
 		}
 		return 0;
