@@ -169,21 +169,14 @@ LRESULT CD3DApp::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch(msg)
 	{
-	case WM_KEYDOWN:
-		if(wParam == VK_ESCAPE)
-		{
-			SendMessage(hWnd, WM_DESTROY, 0,0);
-			break;
-		}
-		return 0;
-	case WM_DESTROY:
-		CleanUp();
-		PostQuitMessage(0);
-		return 0;
-	case WM_PAINT:
-		Render();
-		ValidateRect(hWnd, NULL);
-		return 0;
+		case WM_DESTROY:
+			CleanUp();
+			PostQuitMessage(0);
+			return 0;
+		case WM_PAINT:
+			Render();
+			ValidateRect(hWnd, NULL);
+			return 0;
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);

@@ -12,6 +12,7 @@
 #include <vector>
 #include <stack>
 #include <memory>
+#include <MsXml6.h>
 
 #include "Util.h"
 #include "D3DApp.h"
@@ -39,5 +40,8 @@
 #define GFONT				g_pApp->GetDXFont()
 #define GCAMERA				g_pApp->GetCamera()
 #define GINPUT				g_pGameInput
+
+#define WM_NEW_GAME			(WM_APP + 0x0001)
+#define WM_RESUME_GAME		(WM_APP + 0x0002)
 
 #endif

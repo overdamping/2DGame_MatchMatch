@@ -29,6 +29,21 @@ struct TexQuad	//textured quad built from two triangles
 	CUSTOMVERTEX vertices [4];
 };
 
+struct Button
+{
+	Button() {}
+	Button(long left, long top, long right, long bottom, 
+		float x, float y)
+	{
+		_srcRect = {left, top, right, bottom};
+		_btnRect = {(LONG)x, (LONG)y, (LONG)x+(right-left), (LONG)y+(bottom-top)};
+		_pos.x = x; _pos.y = y;
+	}
+	RECT _srcRect;
+	RECT _btnRect;
+	D3DXVECTOR2 _pos;
+};
+
 #define SAFE_RELEASE(p)		{if (p) {p->Release(); p = nullptr;}}
 #define SAFE_DELEETE(p)		{if (p) {delete(p);  p = nullptr;}}
 

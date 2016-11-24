@@ -68,7 +68,6 @@ int CMain::Init()
 	if (FAILED(D3DXCreateFontIndirect(m_pd3dDevice, &desc, &m_pFont)))
 		return -1;
 
-	//scenes.push((IGameScene*)(m_pGameScene));
 	scenes.push(std::unique_ptr<IGameScene>(m_pGameScene));
 
 	//setting rendering state
@@ -133,25 +132,10 @@ int CMain::Render()
 	if(FAILED(m_pd3dDevice->BeginScene()))
 		return -1;
 
-	//Game Scene Rendering
-	//if (m_pSprite)
-	//{
-	//	if (m_pGameScene)
-	//	{
-	//		if (FAILED(m_pGameScene->Render()))
-	//			return -1;
-	//	}
-	//}
-	//else
-	//	return -1;
-
-	if (m_pSprite)
+	if (!scenes.empty())
 	{
-		if (!scenes.empty())
-		{
-			if (FAILED(scenes.top().get()->Render()))
-				return -1;
-		}
+		if (FAILED(scenes.top().get()->Render()))
+			return -1;
 	}
 	else
 		return -1;
@@ -165,18 +149,47 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch(msg)
 	{
-		if (GINPUT) {
-			case WM_LBUTTONDOWN:
+		case WM_KEYDOWN:
+			if (wParam == VK_ESCAPE)
+			{
+				if (scenes.top().get() == m_pGameScene)
+				{
+					scenes.push(std::unique_ptr<IGameScene>(m_pMainMenu));
+					break;
+				}
+			}
+			return 0;
+		case WM_LBUTTONDOWN:
+			if(GINPUT)
 				GINPUT->LButtonDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-				return 0;
-			case WM_LBUTTONUP:
+			return 0;
+		case WM_LBUTTONUP:
+			if (GINPUT)
+			{
 				GINPUT->LButtonUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 				if (GINPUT->LButtonClicked())
-					//m_pGameScene->ProcessInput();
 					scenes.top().get()->ProcessInput();
-				return 0;
-		}
-		return 0;
+			}
+			return 0;
+		case WM_NEW_GAME:
+			scenes.top().release();
+			scenes.pop();
+			scenes.top().release();
+			scenes.pop();
+			SAFE_DELEETE(m_pGameScene);
+			if (!m_pGameScene)
+			{
+				m_pGameScene = new CGamePlay();
+				if (FAILED(m_pGameScene->Init()))
+					return -1;
+			}
+			scenes.push(std::unique_ptr<IGameScene>(m_pGameScene));
+			return 0;
+		case WM_RESUME_GAME:
+			scenes.top().release();
+			scenes.pop();
+			return 0;
+		/*return 0;*/
 	}
 
 	return CD3DApp::MsgProc(hWnd, msg, wParam, lParam);

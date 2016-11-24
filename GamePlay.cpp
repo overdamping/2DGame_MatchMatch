@@ -73,20 +73,22 @@ void CGamePlay::Destroy()
 
 int CGamePlay::Render()
 {
-		//Background rendering
-		if(!GSPRITE || FAILED(GSPRITE->Draw(m_texBackground.GetTexture(), &m_texBackground.GetImageRect(), nullptr, 0, nullptr, nullptr, D3DXCOLOR(1, 1, 1, 1))))
-			return -1;
-
-		//Game cards rendering
-		for (int i = 0; i < 16; i++)
+	//backgroud and card rendering 
+	if (GSPRITE)
+	{
+		GSPRITE->Draw(m_texBackground.GetTexture(), &m_texBackground.GetImageRect(), nullptr, 0, nullptr, nullptr, D3DXCOLOR(1, 1, 1, 1));
+		for (int ndx = 0; ndx < 16; ndx++)
 		{
-			if (!GSPRITE || FAILED(m_cards[i].Render()))
+			if (FAILED(m_cards[ndx].Render()))
 				return -1;
 		}
+	}
+	else
+		return -1;
 
-		//Game Score rendering
-		if (FAILED(m_gameScore.Render()))
-			return -1;
+	//Game Score rendering
+	if (FAILED(m_gameScore.Render()))
+		return -1;
 
 	return 0;
 }
