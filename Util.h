@@ -50,7 +50,7 @@ struct Button
 {																				\
 	if(p)																		\
 	{																			\
-		if(FAILED(	(p)->Update()))												\
+		if(FAILED((p)->Update()))												\
 			return -1;															\
 	}																			\
 	else																		\
@@ -69,6 +69,9 @@ struct Button
 			return -1;															\
 		}																		\
 	}																			\
+	else 																		\
+		return -1;																\
 }
+
 Ray CalcPickingRay(int screen_x, int screen_y);
 BOOL RayQuadIntersectionTest(Ray r,const CUSTOMVERTEX* quadVertices);

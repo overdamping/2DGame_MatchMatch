@@ -20,7 +20,7 @@ CD3DApp::CD3DApp()
 	m_pd3dSprite	= nullptr;			// 2D Sprite
 
 	m_bShowCusor	= TRUE;
-	m_bWindow		= TRUE;			// Window mode
+	m_bWindow		= TRUE;				// Window mode
 
 }
 

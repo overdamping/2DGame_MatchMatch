@@ -78,18 +78,21 @@ void CMain::Destroy()
 
 int CMain::Update()
 {
-	if (scenes.empty())
+	if (!scenes.empty())
+	{
+		if (FAILED(scenes.top().get()->Update()))	//update current game scene
+			return -1;
+	}
+	else
 		return -1;
-	scenes.top().get()->Update();	//game scene update
 
-	SAFE_UPDATE(m_pCamera);			//camera update
-
+	SAFE_UPDATE(m_pCamera);							//camera update
 	return 0;
 }
 
 int CMain::Render()
 {
-	//Clear the buffer
+	//clear the buffer
 	m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
 	D3DXMATRIX mt;
@@ -102,19 +105,20 @@ int CMain::Render()
 	else 
 		return -1;
 
-	//Begin the Scene
+	//begin the Scene
 	if(FAILED(m_pd3dDevice->BeginScene()))
 		return -1;
 
+	//render the current game scene
 	if (!scenes.empty())
 	{
-		if (FAILED(scenes.top().get()->Render()))	//render game scene
+		if (FAILED(scenes.top().get()->Render()))	
 			return -1;
 	}
 	else
 		return -1;
 	
-	//End the scene
+	//end the scene
 	m_pd3dDevice->EndScene();
 	return 0;
 }
@@ -126,7 +130,7 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:
 			if (wParam == VK_ESCAPE)							//press ESC key
 			{
-				if (scenes.top().get() == m_pGameScene)			//enter main menu
+				if (scenes.top().get() == m_pGameScene)			//enter main menu from game play scene
 				{
 					scenes.push(std::unique_ptr<IGameScene>(m_pMainMenu));
 					assert(scenes.top().get() == m_pMainMenu);
@@ -149,19 +153,19 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				}
 			}
 			return 0;
-		case WM_NEW_GAME:										//load new game (create new game scene and push to scene stack)
-			scenes.top().release();								//pop the main menu
+		case WM_NEW_GAME:											//load new game
+			scenes.top().release();									//pop the main menu
 			scenes.pop();
 			assert(scenes.top().get() == m_pGameScene);
-			scenes.top().release();								//pop the current game play scene
+			scenes.top().release();									//pop the current play scene
 			scenes.pop();
 			assert(scenes.empty());
 			SAFE_DELEETE(m_pGameScene);
-			SAFE_INIT(m_pGameScene, CGamePlay);
-			scenes.push(std::unique_ptr<IGameScene>(m_pGameScene));
+			SAFE_INIT(m_pGameScene, CGamePlay);						//create new game play scene
+			scenes.push(std::unique_ptr<IGameScene>(m_pGameScene));	//push to scene stack
 			return 0;
-		case WM_RESUME_GAME:									//resume game (pop the main menu from scene stack)
-			scenes.top().release();
+		case WM_RESUME_GAME:									//resume game
+			scenes.top().release();								//pop the main menu from scene stack
 			scenes.pop();
 			assert(scenes.top().get() == m_pGameScene);
 			return 0;

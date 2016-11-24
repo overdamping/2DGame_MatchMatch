@@ -42,10 +42,8 @@ int CMainMenu::ProcessInput()			//process mouse input (left button click)
 
 	if (PtInRect(&m_btnNew._btnRect, pt))
 		SendMessage(GetActiveWindow(), WM_NEW_GAME, 0, 0);
-		/*MessageBox(GetActiveWindow(), "new!", "new!", 0);*/
 	else if (PtInRect(&m_btnResume._btnRect, pt))
 		SendMessage(GetActiveWindow(), WM_RESUME_GAME, 0, 0);
-		/*MessageBox(GetActiveWindow(), "resume!", "resume!", 0);*/
 	else if (PtInRect(&m_btnRank._btnRect, pt))
 		MessageBox(GetActiveWindow(), "Rank!", "Rank!", 0);
 	else
@@ -70,14 +68,16 @@ int CMainMenu::Render()
 	else
 		return -1;
 
-	//if (GFONT)
-	//{
-	//	GFONT->DrawText(NULL, "new game", -1, &RECT{200, 350, 250, 400}, 0, D3DXCOLOR(1, 1, 1, 1));
-	//	GFONT->DrawText(NULL, "resume", -1, &RECT(), 0, D3DXCOLOR(1, 1, 1, 1));
-	//	GFONT->DrawText(NULL, "ranking", -1, &RECT(), 0, D3DXCOLOR(1, 1, 1, 1));
-	//}
-	//else
-	//	return -1;
+	RECT rc;
+	::SetRect(&rc, 200, 350, 300, 400);
+	if (GFONT)
+	{
+		GFONT->DrawText(NULL, "new", -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
+		//GFONT->DrawText(NULL, "resume", -1, &RECT(), 0, D3DXCOLOR(1, 1, 1, 1));
+		//GFONT->DrawText(NULL, "ranking", -1, &RECT(), 0, D3DXCOLOR(1, 1, 1, 1));
+	}
+	else
+		return -1;
 
 	return 0;
 }
