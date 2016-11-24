@@ -46,6 +46,15 @@ struct Button
 
 #define SAFE_RELEASE(p)		{if (p) {p->Release(); p = nullptr;}}
 #define SAFE_DELEETE(p)		{if (p) {delete(p);  p = nullptr;}}
+#define SAFE_UPDATE(p)															\
+{																				\
+	if(p)																		\
+	{																			\
+		if(FAILED(	(p)->Update()))												\
+			return -1;															\
+	}																			\
+	return -1;																	\
+}
 
 Ray CalcPickingRay(int screen_x, int screen_y);
 BOOL RayQuadIntersectionTest(Ray r,const CUSTOMVERTEX* quadVertices);

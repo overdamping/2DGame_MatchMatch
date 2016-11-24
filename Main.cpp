@@ -24,6 +24,7 @@ int CMain::Init()
 			return -1;
 	}
 
+	scenes.push(std::unique_ptr<IGameScene>(m_pGameScene));	//push game scene into scene stack
 	
 	if (!m_pMainMenu)
 	{
@@ -68,8 +69,6 @@ int CMain::Init()
 	if (FAILED(D3DXCreateFontIndirect(m_pd3dDevice, &desc, &m_pFont)))
 		return -1;
 
-	scenes.push(std::unique_ptr<IGameScene>(m_pGameScene));
-
 	//setting rendering state
 	m_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);			//turn off advanced 3D lighting
 	m_pd3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);		//turn off culling (render both sides of each polygon)
@@ -87,7 +86,6 @@ void CMain::Destroy()
 		scenes.top().release();
 		scenes.pop();
 	}
-
 	SAFE_DELEETE(m_pGameScene);
 	SAFE_DELEETE(m_pMainMenu);
 	SAFE_RELEASE(m_pFont);
@@ -98,17 +96,14 @@ void CMain::Destroy()
 
 int CMain::Update()
 {
-	//if (!m_pGameScene)
-	//	return -1;
-	//m_pGameScene->Update();
-
 	if (scenes.empty())
 		return -1;
-	scenes.top().get()->Update();
+	scenes.top().get()->Update();	
 
-	if (!m_pCamera)
-		return -1;
-	m_pCamera->Update();
+	//if (!m_pCamera)
+	//	return -1;
+	//m_pCamera->Update();
+	SAFE_UPDATE(m_pCamera);
 
 	return 0;
 }
