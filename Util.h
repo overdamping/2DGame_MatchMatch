@@ -53,8 +53,22 @@ struct Button
 		if(FAILED(	(p)->Update()))												\
 			return -1;															\
 	}																			\
-	return -1;																	\
+	else																		\
+		return -1;																\
 }
 
+#define SAFE_INIT(p, CLASSTYPE)													\
+{																				\
+	if((p) == nullptr)															\
+	{																			\
+		p = new CLASSTYPE;														\
+		if(FAILED((p)->Init()))													\
+		{																		\
+			delete p;															\
+			p = nullptr;														\
+			return -1;															\
+		}																		\
+	}																			\
+}
 Ray CalcPickingRay(int screen_x, int screen_y);
 BOOL RayQuadIntersectionTest(Ray r,const CUSTOMVERTEX* quadVertices);

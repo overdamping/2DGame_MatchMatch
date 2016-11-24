@@ -12,7 +12,8 @@
 #include <vector>
 #include <stack>
 #include <memory>
-#include <MsXml6.h>
+#include <cassert>
+//#include <MsXml6.h>	fix: use xml
 
 #include "Util.h"
 #include "D3DApp.h"

@@ -17,34 +17,16 @@ CMain::~CMain()
 
 int CMain::Init()
 {
-	if (!m_pGameScene)
-	{
-		m_pGameScene = new CGamePlay();
-		if (FAILED(m_pGameScene->Init()))
-			return -1;
-	}
-
-	scenes.push(std::unique_ptr<IGameScene>(m_pGameScene));	//push game scene into scene stack
+	SAFE_INIT(m_pGameScene, CGamePlay);							//create and init game play scene
+	scenes.push(std::unique_ptr<IGameScene>(m_pGameScene));		//push the scene into scene stack
 	
-	if (!m_pMainMenu)
-	{
-		m_pMainMenu = new CMainMenu();
-		if (FAILED(m_pMainMenu->Init()))
-			return -1;
-	}
-	
+	SAFE_INIT(m_pMainMenu, CMainMenu);							//create and init game main menu
+	SAFE_INIT(m_pGameInput, CGameInput);						//create and init input object
 
 	if (!m_pSprite)
 	{
 		m_pSprite = new CGameSprite();
 		if (FAILED(m_pSprite->Create(m_pd3dSprite)))
-			return -1;
-	}
-
-	if (!m_pGameInput)
-	{
-		m_pGameInput = new CGameInput();
-		if (FAILED(m_pGameInput->Init()))
 			return -1;
 	}
 
@@ -98,12 +80,9 @@ int CMain::Update()
 {
 	if (scenes.empty())
 		return -1;
-	scenes.top().get()->Update();	
+	scenes.top().get()->Update();	//game scene update
 
-	//if (!m_pCamera)
-	//	return -1;
-	//m_pCamera->Update();
-	SAFE_UPDATE(m_pCamera);
+	SAFE_UPDATE(m_pCamera);			//camera update
 
 	return 0;
 }
@@ -129,7 +108,7 @@ int CMain::Render()
 
 	if (!scenes.empty())
 	{
-		if (FAILED(scenes.top().get()->Render()))
+		if (FAILED(scenes.top().get()->Render()))	//render game scene
 			return -1;
 	}
 	else
@@ -145,11 +124,12 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch(msg)
 	{
 		case WM_KEYDOWN:
-			if (wParam == VK_ESCAPE)
+			if (wParam == VK_ESCAPE)							//press ESC key
 			{
-				if (scenes.top().get() == m_pGameScene)
+				if (scenes.top().get() == m_pGameScene)			//enter main menu
 				{
 					scenes.push(std::unique_ptr<IGameScene>(m_pMainMenu));
+					assert(scenes.top().get() == m_pMainMenu);
 					break;
 				}
 			}
@@ -163,28 +143,28 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				GINPUT->LButtonUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 				if (GINPUT->LButtonClicked())
-					scenes.top().get()->ProcessInput();
+				{
+					assert(!scenes.empty());
+					scenes.top().get()->ProcessInput();			//process mouse input(left button click)
+				}
 			}
 			return 0;
-		case WM_NEW_GAME:
-			scenes.top().release();
+		case WM_NEW_GAME:										//load new game (create new game scene and push to scene stack)
+			scenes.top().release();								//pop the main menu
 			scenes.pop();
-			scenes.top().release();
+			assert(scenes.top().get() == m_pGameScene);
+			scenes.top().release();								//pop the current game play scene
 			scenes.pop();
+			assert(scenes.empty());
 			SAFE_DELEETE(m_pGameScene);
-			if (!m_pGameScene)
-			{
-				m_pGameScene = new CGamePlay();
-				if (FAILED(m_pGameScene->Init()))
-					return -1;
-			}
+			SAFE_INIT(m_pGameScene, CGamePlay);
 			scenes.push(std::unique_ptr<IGameScene>(m_pGameScene));
 			return 0;
-		case WM_RESUME_GAME:
+		case WM_RESUME_GAME:									//resume game (pop the main menu from scene stack)
 			scenes.top().release();
 			scenes.pop();
+			assert(scenes.top().get() == m_pGameScene);
 			return 0;
-		/*return 0;*/
 	}
 
 	return CD3DApp::MsgProc(hWnd, msg, wParam, lParam);
