@@ -16,19 +16,19 @@ CGamePlay::~CGamePlay()
 
 int CGamePlay::Init() 
 {
-	//Texture creation
-	if (FAILED(m_texBackground.Create(GDEVICE, "Texture/wood_texture.bmp")))
+	//texture creation
+	if (FAILED(m_texBackground.Create(GDEVICE, "texture/wood_texture.bmp")))
 		return -1;
 
-	m_texCard[0].Create(GDEVICE, "Texture/ace.png");
-	m_texCard[1].Create(GDEVICE, "Texture/castle.png");
-	m_texCard[2].Create(GDEVICE, "Texture/fishing.png");
-	m_texCard[3].Create(GDEVICE, "Texture/horus.png");
-	m_texCard[4].Create(GDEVICE, "Texture/key.png");
-	m_texCard[5].Create(GDEVICE, "Texture/rocket.png");
-	m_texCard[6].Create(GDEVICE, "Texture/sniffing-dog.png");
-	m_texCard[7].Create(GDEVICE, "Texture/wolf-head.png");
-	m_texCard[8].Create(GDEVICE, "Texture/backFace.png");
+	m_texCard[0].Create(GDEVICE, "texture/ace.png");
+	m_texCard[1].Create(GDEVICE, "texture/castle.png");
+	m_texCard[2].Create(GDEVICE, "texture/fishing.png");
+	m_texCard[3].Create(GDEVICE, "texture/horus.png");
+	m_texCard[4].Create(GDEVICE, "texture/key.png");
+	m_texCard[5].Create(GDEVICE, "texture/rocket.png");
+	m_texCard[6].Create(GDEVICE, "texture/sniffing-dog.png");
+	m_texCard[7].Create(GDEVICE, "texture/wolf-head.png");
+	m_texCard[8].Create(GDEVICE, "texture/backFace.png");
 	
 	//Card objects creation
 	CreateCards();
@@ -93,10 +93,10 @@ int CGamePlay::Render()
 	return 0;
 }
 
-int CGamePlay::ProcessInput()							//process mouse input (left button click)
+int CGamePlay::ProcessInput()	//process mouse input (left button click)
 {
 	D3DXVECTOR3 pos = GINPUT->GetCurMousePos();
-	Ray ray = CalcPickingRay(pos.x, pos.y);				//get picking ray
+	Ray ray = CalcPickingRay(pos.x, pos.y);		//get picking ray
 
 	for (int ndx = 0; ndx < 16; ndx++)
 	{
@@ -127,7 +127,7 @@ int CGamePlay::Update()
 	if (ndxSecondClk != -1)
 	{
 		m_fTimeEnd = timeGetTime() * 0.001f;
-		if (m_fTimeEnd - m_fTimeBgn >= 0.2)			//delay for 0.2sec after second card clicked
+		if (m_fTimeEnd - m_fTimeBgn >= 0.2)		//delay for 0.2sec after second card clicked
 		{
 			if (m_cards[ndxFirstClk].Equals(&m_cards[ndxSecondClk]))	//pair matching success
 			{

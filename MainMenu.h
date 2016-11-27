@@ -17,8 +17,11 @@ public:
 	int Render();
 
 private:
-	CGameTexture m_texBackground;
+	CGameTexture m_texUIpack;
 	CGameTexture m_texButtons;
+	
+	Panel m_panMetal;
+	Panel m_panPlate;
 
 	Button m_btnNew;
 	Button m_btnResume;

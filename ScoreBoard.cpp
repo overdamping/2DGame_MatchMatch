@@ -24,7 +24,7 @@ int CScoreBoard::Render()
 {
 	char strBuff[80];
 	char scrBuff[20];
-	strcpy_s(strBuff, "Attempts: ");
+	strcpy_s(strBuff, "Attempts : ");
 	_itoa_s(m_cntAttemps, scrBuff, 20, 10);
 	strcat_s(strBuff, scrBuff);
 

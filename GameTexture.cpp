@@ -24,9 +24,9 @@ int CGameTexture::Create(LPDIRECT3DDEVICE9 pDev, const char* sFile)
 		0x0000001,							//Filtering
 		0x0000001,							//Mip filtering
 		0x00FFFFFF,							//Color key
-		&m_Img,								//Texture Information
+		&m_Img,								//texture Information
 		NULL,
-		&m_pTx								//Texture Pointer
+		&m_pTx								//texture Pointer
 		)))		
 	{
 		MessageBox(GetActiveWindow(), "Can not find texture file", "Err", 0);

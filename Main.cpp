@@ -17,11 +17,10 @@ CMain::~CMain()
 
 int CMain::Init()
 {
-	SAFE_INIT(m_pGameScene, CGamePlay);							//create and init game play scene
-	scenes.push(std::unique_ptr<IGameScene>(m_pGameScene));		//push the scene into scene stack
-	
-	SAFE_INIT(m_pMainMenu, CMainMenu);							//create and init game main menu
-	SAFE_INIT(m_pGameInput, CGameInput);						//create and init input object
+	//create and initialize game play scene, main menu, input object
+	SAFE_INIT(m_pGameScene, CGamePlay);							
+	SAFE_INIT(m_pMainMenu, CMainMenu);							
+	SAFE_INIT(m_pGameInput, CGameInput);						 
 
 	if (!m_pSprite)
 	{
@@ -37,17 +36,22 @@ int CMain::Init()
 			return -1;
 	}
 
+	//font creattion
+	if (AddFontResourceEx("font/08SeoulNamsanB.ttf", FR_PRIVATE | FR_NOT_ENUM, NULL) == 0)
+		return -1;
+
 	D3DXFONT_DESC desc;
 	desc.CharSet = HANGUL_CHARSET;
-	desc.Height = 28;
+	desc.Height = 30;
 	desc.Width = 0;
-	desc.Weight = FW_NORMAL;
-	desc.Quality = DEFAULT_QUALITY;
+	desc.Weight = FW_BOLD;
+	desc.Quality = ANTIALIASED_QUALITY;
 	desc.MipLevels = 1;
-	desc.Italic = 0;
+	desc.Italic = FALSE;
 	desc.OutputPrecision = OUT_DEFAULT_PRECIS;
 	desc.PitchAndFamily = FF_DONTCARE;
-
+	strcpy_s(desc.FaceName, "08서울남산체 B");
+	
 	if (FAILED(D3DXCreateFontIndirect(m_pd3dDevice, &desc, &m_pFont)))
 		return -1;
 
@@ -63,10 +67,10 @@ int CMain::Init()
 
 void CMain::Destroy()
 {
-	while (!scenes.empty())
+	while (!menus.empty())
 	{
-		scenes.top().release();
-		scenes.pop();
+		menus.top().release();
+		menus.pop();
 	}
 	SAFE_DELEETE(m_pGameScene);
 	SAFE_DELEETE(m_pMainMenu);
@@ -78,14 +82,16 @@ void CMain::Destroy()
 
 int CMain::Update()
 {
-	if (!scenes.empty())
+	if (menus.empty())
 	{
-		if (FAILED(scenes.top().get()->Update()))	//update current game scene
-			return -1;
+		SAFE_UPDATE(m_pGameScene);
 	}
 	else
-		return -1;
-
+	{
+		if (FAILED(menus.top().get()->Update()))	//update current game scene
+			return -1;
+	}
+		
 	SAFE_UPDATE(m_pCamera);							//camera update
 	return 0;
 }
@@ -110,13 +116,17 @@ int CMain::Render()
 		return -1;
 
 	//render the current game scene
-	if (!scenes.empty())
+	if (m_pGameScene)
 	{
-		if (FAILED(scenes.top().get()->Render()))	
+		if (FAILED(m_pGameScene->Render()))
 			return -1;
 	}
-	else
-		return -1;
+
+	if (!menus.empty())
+	{
+		if (FAILED(menus.top().get()->Render()))	
+			return -1;
+	}
 	
 	//end the scene
 	m_pd3dDevice->EndScene();
@@ -128,13 +138,12 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch(msg)
 	{
 		case WM_KEYDOWN:
-			if (wParam == VK_ESCAPE)							//press ESC key
+			if (wParam == VK_ESCAPE)	//press ESC key (enter main menu)
 			{
-				if (scenes.top().get() == m_pGameScene)			//enter main menu from game play scene
+				if (menus.empty())
 				{
-					scenes.push(std::unique_ptr<IGameScene>(m_pMainMenu));
-					assert(scenes.top().get() == m_pMainMenu);
-					break;
+					menus.push(std::unique_ptr<IGameScene>(m_pMainMenu));
+					assert(menus.top().get() == m_pMainMenu);
 				}
 			}
 			return 0;
@@ -146,28 +155,26 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			if (GINPUT)
 			{
 				GINPUT->LButtonUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-				if (GINPUT->LButtonClicked())
+				if (GINPUT->LButtonClicked())	//process mouse input(left button click)
 				{
-					assert(!scenes.empty());
-					scenes.top().get()->ProcessInput();			//process mouse input(left button click)
+					if (!menus.empty())
+						menus.top().get()->ProcessInput();	
+					else
+						m_pGameScene->ProcessInput();
 				}
 			}
 			return 0;
-		case WM_NEW_GAME:											//load new game
-			scenes.top().release();									//pop the main menu
-			scenes.pop();
-			assert(scenes.top().get() == m_pGameScene);
-			scenes.top().release();									//pop the current play scene
-			scenes.pop();
-			assert(scenes.empty());
+		case WM_NEW_GAME:		//load new game
+			menus.top().release();	//pop the main menu
+			menus.pop();
+			assert(menus.empty());
 			SAFE_DELEETE(m_pGameScene);
-			SAFE_INIT(m_pGameScene, CGamePlay);						//create new game play scene
-			scenes.push(std::unique_ptr<IGameScene>(m_pGameScene));	//push to scene stack
+			SAFE_INIT(m_pGameScene, CGamePlay);		//create new game play scene
 			return 0;
-		case WM_RESUME_GAME:									//resume game
-			scenes.top().release();								//pop the main menu from scene stack
-			scenes.pop();
-			assert(scenes.top().get() == m_pGameScene);
+		case WM_RESUME_GAME:	//resume game
+			menus.top().release();	//pop the main menu from menu stack
+			menus.pop();
+			assert(m_pGameScene);
 			return 0;
 	}
 

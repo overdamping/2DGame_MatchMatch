@@ -32,15 +32,28 @@ struct TexQuad	//textured quad built from two triangles
 struct Button
 {
 	Button() {}
-	Button(long left, long top, long right, long bottom, 
+	Button(long left, long top, long width, long height, 
 		float x, float y)
 	{
-		_srcRect = {left, top, right, bottom};
-		_btnRect = {(LONG)x, (LONG)y, (LONG)x+(right-left), (LONG)y+(bottom-top)};
+		::SetRect(&_srcRect, left, top, left + width, top + height);
+		::SetRect(&_btnRect, (LONG)x, (LONG)y, (LONG)x + height, (LONG)y + height);
 		_pos.x = x; _pos.y = y;
 	}
 	RECT _srcRect;
 	RECT _btnRect;
+	D3DXVECTOR2 _pos;
+};
+
+struct Panel
+{
+	Panel() {}
+	Panel(long left, long top, long width, long height,
+		float x, float y)
+	{
+		::SetRect(&_srcRect, left, top, left + width, top + height);
+		_pos.x = x; _pos.y = y;
+	}
+	RECT _srcRect;
 	D3DXVECTOR2 _pos;
 };
 
@@ -53,8 +66,6 @@ struct Button
 		if(FAILED((p)->Update()))												\
 			return -1;															\
 	}																			\
-	else																		\
-		return -1;																\
 }
 
 #define SAFE_INIT(p, CLASSTYPE)													\
@@ -69,8 +80,6 @@ struct Button
 			return -1;															\
 		}																		\
 	}																			\
-	else 																		\
-		return -1;																\
 }
 
 Ray CalcPickingRay(int screen_x, int screen_y);
