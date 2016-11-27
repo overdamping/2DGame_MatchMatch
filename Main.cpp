@@ -138,12 +138,17 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch(msg)
 	{
 		case WM_KEYDOWN:
-			if (wParam == VK_ESCAPE)	//press ESC key (enter main menu)
+			if (wParam == VK_ESCAPE)	//press ESC key 
 			{
-				if (menus.empty())
+				if (menus.empty())	//enter main menu
 				{
 					menus.push(std::unique_ptr<IGameScene>(m_pMainMenu));
 					assert(menus.top().get() == m_pMainMenu);
+				}
+				else	//exit main menu
+				{
+					menus.top().release();
+					menus.pop();
 				}
 			}
 			return 0;
@@ -164,14 +169,14 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				}
 			}
 			return 0;
-		case WM_NEW_GAME:		//load new game
+		case WM_NEW_GAME:			//load new game
 			menus.top().release();	//pop the main menu
 			menus.pop();
 			assert(menus.empty());
 			SAFE_DELEETE(m_pGameScene);
 			SAFE_INIT(m_pGameScene, CGamePlay);		//create new game play scene
 			return 0;
-		case WM_RESUME_GAME:	//resume game
+		case WM_RESUME_GAME:		//resume game
 			menus.top().release();	//pop the main menu from menu stack
 			menus.pop();
 			assert(m_pGameScene);
