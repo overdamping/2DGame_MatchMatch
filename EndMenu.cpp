@@ -24,6 +24,14 @@ int CEndMenu::Init()
 	if (FAILED(m_texButtons.Create(GDEVICE, "texture/sheet_white2x.png")))
 		return -1;
 
+	//message creation
+	m_strMsg = new char[80];
+	char strbuf[80] = "축하합니다! 당신의 점수는 ";
+	char scrBuf[20];
+	_itoa_s(score, scrBuf, 20, 10);
+	strcat_s(strbuf, 80, scrBuf);
+	strcpy_s(m_strMsg, 80, strbuf);
+
 	//fix : use xml
 	m_panMetal = Panel(200, 200, 100, 100, 200, 200);
 	m_panPlate = Panel(301, 212, 79, 80, 220, 255);
@@ -68,16 +76,11 @@ int CEndMenu::Render()
 	else
 		return -1;
 
-	char strBuff[80] = "축하합니다! 당신의 점수는 ";
-	char scrBuff[20];
-	_itoa_s(score, scrBuff, 20, 10);
-	strcat_s(strBuff, scrBuff);
-
 	RECT rc;
 	if (GFONT)
 	{
 		::SetRect(&rc, 240, 220, 640, 300);
-		GFONT->DrawText(NULL, strBuff, -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
+		GFONT->DrawText(NULL, m_strMsg, -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
 		::SetRect(&rc, 250, 340, 380, 370);
 		GFONT->DrawText(NULL, "새 게임", -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
 		::SetRect(&rc, 485, 340, 585, 370);

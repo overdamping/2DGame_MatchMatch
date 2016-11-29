@@ -18,6 +18,7 @@ public:
 
 private:
 	int score;
+	char* m_strMsg;
 	CGameTexture m_texUIpack;
 	CGameTexture m_texButtons;
 
