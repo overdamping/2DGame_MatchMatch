@@ -42,7 +42,7 @@ int CMain::Init()
 
 	D3DXFONT_DESC desc;
 	desc.CharSet = HANGUL_CHARSET;
-	desc.Height = 30;
+	desc.Height = 26;
 	desc.Width = 0;
 	desc.Weight = FW_BOLD;
 	desc.Quality = ANTIALIASED_QUALITY;

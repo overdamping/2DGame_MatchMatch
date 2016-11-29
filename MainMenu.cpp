@@ -27,9 +27,9 @@ int CMainMenu::Init()
 	m_panMetal = Panel(200, 200, 100, 100, 200, 200);
 	m_panPlate = Panel(301, 212, 79, 80, 220, 255);
 
-	m_btnNew = Button(200, 500, 100, 100, 240, 265);
-	m_btnResume = Button(200, 300, 100, 100, 350, 265);
-	m_btnRank = Button(300, 800, 100, 100, 460, 265);
+	m_btnNew = Button(200, 500, 100, 100, 240, 245);
+	m_btnResume = Button(200, 300, 100, 100, 350, 245);
+	m_btnRank = Button(300, 800, 100, 100, 460, 245);
 
 	return 0;
 }
@@ -72,10 +72,16 @@ int CMainMenu::Render()
 		return -1;
 
 	RECT rc;
-	::SetRect(&rc, 335, 210, 500, 300);
 	if (GFONT)
-	{
+	{	
+		::SetRect(&rc, 335, 210, 500, 300);
 		GFONT->DrawText(NULL, "- menu -", -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
+		::SetRect(&rc, 250, 340, 380, 370);
+		GFONT->DrawText(NULL, "새 게임", -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
+		::SetRect(&rc, 350, 340, 450, 370);
+		GFONT->DrawText(NULL, "이어하기", -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
+		::SetRect(&rc, 485, 340, 585, 370);
+		GFONT->DrawText(NULL, "순위", -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
 	}
 	else
 		return -1;
