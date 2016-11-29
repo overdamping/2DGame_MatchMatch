@@ -26,6 +26,7 @@
 #include "GameScene.h"
 #include "GamePlay.h"
 #include "MainMenu.h"
+#include "EndMenu.h"
 #include "Main.h"
 
 #define SCREEN_WIDTH		800
