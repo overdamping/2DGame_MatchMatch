@@ -44,5 +44,6 @@
 
 #define WM_NEW_GAME			(WM_APP + 0x0001)
 #define WM_RESUME_GAME		(WM_APP + 0x0002)
+#define	WM_GAME_WON			(WM_APP + 0X0003)
 
 #endif
