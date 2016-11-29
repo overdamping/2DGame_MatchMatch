@@ -4,7 +4,7 @@
 #pragma once
 #include "StdAfx.h"
 
-CMain::CMain() :m_pSprite(nullptr), m_pFont(nullptr), m_pGameScene(nullptr), m_pMainMenu(nullptr), m_pGameInput(nullptr), m_pCamera(nullptr)
+CMain::CMain() :m_pSprite(nullptr), m_pFont(nullptr), m_pGameScene(nullptr), m_pMainMenu(nullptr), m_pEndMenu(nullptr), m_pGameInput(nullptr), m_pCamera(nullptr)
 {
 	
 }
@@ -147,8 +147,11 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				}
 				else	//exit main menu
 				{
-					menus.top().release();
-					menus.pop();
+					if (menus.top().get() == m_pMainMenu)
+					{
+						menus.top().release();
+						menus.pop();
+					}
 				}
 			}
 			return 0;
@@ -170,6 +173,7 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			}
 			return 0;
 		case WM_NEW_GAME:			//load new game
+			SAFE_DELEETE(m_pEndMenu);
 			menus.top().release();	//pop the main menu
 			menus.pop();
 			assert(menus.empty());
@@ -180,6 +184,17 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			menus.top().release();	//pop the main menu from menu stack
 			menus.pop();
 			assert(m_pGameScene);
+			return 0;
+		case WM_GAME_WON:			//won the game
+			if ((m_pEndMenu) == nullptr)	//create and show end menu with final score														
+			{																			
+				m_pEndMenu = new CEndMenu(wParam);
+				if (m_pEndMenu)
+					assert(!FAILED(m_pEndMenu->Init()));
+			}	
+			assert(menus.empty());
+			menus.push(std::unique_ptr<IGameScene>(m_pEndMenu));
+			assert(menus.top().get() == m_pEndMenu);
 			return 0;
 	}
 

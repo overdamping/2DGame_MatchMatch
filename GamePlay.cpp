@@ -34,7 +34,7 @@ int CGamePlay::Init()
 	CreateCards();
 
 	//Score board creation
-	m_gameScore.Create(585, 29, 215, 30);
+	m_gameScore.Create(590, 35, 215, 30);
 
 	//setting indices
 	ndxFirstClk = -1;
@@ -146,9 +146,9 @@ int CGamePlay::Update()
 		}
 	}
 
-	//Game End : All card pairs matched
+	//Game won : All card pairs are matched
 	if (cntMatchedPair == 8)
-		PostQuitMessage(0);
+		SendMessage(GetActiveWindow(), WM_GAME_WON, m_gameScore.GetGameScore(), 0);
 
 	return 0;
 }

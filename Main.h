@@ -20,6 +20,7 @@ public:
 private:
 	IGameScene*		m_pGameScene;
 	IGameScene* 	m_pMainMenu;
+	IGameScene*		m_pEndMenu;
 	std::stack<std::unique_ptr<IGameScene>> menus;
 
 	LPD3DXFONT		m_pFont;

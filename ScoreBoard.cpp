@@ -22,9 +22,8 @@ int CScoreBoard::Create(float posX, float posY, float width, float height)
 
 int CScoreBoard::Render()
 {
-	char strBuff[80];
+	char strBuff[80] = "Attemps : ";
 	char scrBuff[20];
-	strcpy_s(strBuff, "Attempts : ");
 	_itoa_s(m_cntAttemps, scrBuff, 20, 10);
 	strcat_s(strBuff, scrBuff);
 
