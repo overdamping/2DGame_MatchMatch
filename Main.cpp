@@ -142,12 +142,13 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				if (menus.empty())	//enter main menu
 				{
+					assert(m_pMainMenu);
 					menus.push(std::unique_ptr<IGameScene>(m_pMainMenu));
 					assert(menus.top().get() == m_pMainMenu);
 				}
-				else	//exit main menu
+				else	//exit current menu(except end menu)
 				{
-					if (menus.top().get() == m_pMainMenu)
+					if (menus.top().get() != m_pEndMenu)
 					{
 						menus.top().release();
 						menus.pop();
@@ -179,11 +180,12 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			assert(menus.empty());
 			SAFE_DELEETE(m_pGameScene);
 			SAFE_INIT(m_pGameScene, CGamePlay);		//create new game play scene
+			assert(m_pGameScene);
 			return 0;
 		case WM_RESUME_GAME:		//resume game
 			menus.top().release();	//pop the main menu from menu stack
 			menus.pop();
-			assert(m_pGameScene);
+			assert(menus.empty());
 			return 0;
 		case WM_GAME_WON:			//won the game
 			if ((m_pEndMenu) == nullptr)	//create and show end menu with final score														
