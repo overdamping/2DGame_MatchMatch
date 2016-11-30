@@ -32,11 +32,11 @@ struct TexQuad	//textured quad built from two triangles
 struct Button
 {
 	Button() {}
-	Button(long left, long top, long width, long height, 
+	Button(int left, int top, int width, int height, 
 		float x, float y)
 	{
 		::SetRect(&_srcRect, left, top, left + width, top + height);
-		::SetRect(&_btnRect, (LONG)x, (LONG)y, (LONG)x + height, (LONG)y + height);
+		::SetRect(&_btnRect, x, y, x + height, y + height);
 		_pos.x = x; _pos.y = y;
 	}
 	RECT _srcRect;
@@ -47,7 +47,7 @@ struct Button
 struct Panel
 {
 	Panel() {}
-	Panel(long left, long top, long width, long height,
+	Panel(int left, int top, int width, int height,
 		float x, float y)
 	{
 		::SetRect(&_srcRect, left, top, left + width, top + height);
