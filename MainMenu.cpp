@@ -24,12 +24,76 @@ int CMainMenu::Init()
 		return -1;
 
 	//fix : use xml
-	m_panMetal = Panel(200, 200, 100, 100, 200, 200);
-	m_panPlate = Panel(301, 212, 79, 80, 220, 255);
+	rapidxml::xml_document<> doc;
+	rapidxml::xml_node<> * root_node;
 
-	m_btnNew = Button(200, 500, 100, 100, 240, 245);
-	m_btnResume = Button(200, 300, 100, 100, 350, 245);
-	m_btnRank = Button(300, 800, 100, 100, 460, 245);
+	// Read the xml file into a vector
+	std::ifstream theFile("texture/uipackSpace_sheet.xml");
+	std::vector<char> bufferUI((std::istreambuf_iterator<char>(theFile)), std::istreambuf_iterator<char>());
+	bufferUI.push_back('\0');
+
+	// Parse the buffer using the xml file parsing library into doc 
+	doc.parse<0>(&bufferUI[0]);
+	// Find our root node
+	root_node = doc.first_node("TextureAtlas");
+	// Iterate over the subtexture
+	for (rapidxml::xml_node<> * subtexture_node = root_node->first_node("SubTexture"); subtexture_node; subtexture_node = subtexture_node->next_sibling())
+	{
+		if (!strcmp(subtexture_node->first_attribute("name")->value(), "metalPanel.png"))
+		{
+			m_panMetal = Panel(atoi(subtexture_node->first_attribute("x")->value()),
+				atoi(subtexture_node->first_attribute("y")->value()),
+				atoi(subtexture_node->first_attribute("width")->value()),
+				atoi(subtexture_node->first_attribute("height")->value()),
+				200, 200);
+		}
+		if (!strcmp(subtexture_node->first_attribute("name")->value(), "metalPanel_plate.png"))
+		{
+			m_panPlate = Panel(atoi(subtexture_node->first_attribute("x")->value()),
+				atoi(subtexture_node->first_attribute("y")->value()),
+				atoi(subtexture_node->first_attribute("width")->value()),
+				atoi(subtexture_node->first_attribute("height")->value()),
+				220, 255);
+		}
+	}
+
+	doc.clear();
+	theFile.clear();
+
+	std::ifstream theFile2("texture/sheet_white2x.xml");
+	std::vector<char> bufferBut((std::istreambuf_iterator<char>(theFile2)), std::istreambuf_iterator<char>());
+	bufferBut.push_back('\0');
+	doc.parse<0>(&bufferBut[0]);
+	root_node = doc.first_node("TextureAtlas");
+
+	// Iterate over the subtexture
+	for (rapidxml::xml_node<> * subtexture_node = root_node->first_node("SubTexture"); subtexture_node; subtexture_node = subtexture_node->next_sibling())
+	{
+		if (!strcmp(subtexture_node->first_attribute("name")->value(), "return.png"))
+		{
+			m_btnNew = Button(atoi(subtexture_node->first_attribute("x")->value()),
+				atoi(subtexture_node->first_attribute("y")->value()),
+				atoi(subtexture_node->first_attribute("width")->value()),
+				atoi(subtexture_node->first_attribute("height")->value()),
+				240, 245);
+		}
+		if (!strcmp(subtexture_node->first_attribute("name")->value(), "right.png"))
+		{
+			m_btnResume = Button(atoi(subtexture_node->first_attribute("x")->value()),
+				atoi(subtexture_node->first_attribute("y")->value()),
+				atoi(subtexture_node->first_attribute("width")->value()),
+				atoi(subtexture_node->first_attribute("height")->value()),
+				350, 245);
+		}
+		if (!strcmp(subtexture_node->first_attribute("name")->value(), "leaderboardsComplex.png"))
+		{
+			m_btnRank = Button(atoi(subtexture_node->first_attribute("x")->value()),
+				atoi(subtexture_node->first_attribute("y")->value()),
+				atoi(subtexture_node->first_attribute("width")->value()),
+				atoi(subtexture_node->first_attribute("height")->value()),
+				460, 245);
+		}
+	}
 
 	return 0;
 }

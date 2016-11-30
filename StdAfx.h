@@ -13,7 +13,8 @@
 #include <stack>
 #include <memory>
 #include <cassert>
-//#include <MsXml6.h>	fix: use xml
+#include <fstream>
+#include "rapidxml-1.13\rapidxml.hpp"
 
 #include "Util.h"
 #include "D3DApp.h"
