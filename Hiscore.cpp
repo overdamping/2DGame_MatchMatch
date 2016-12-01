@@ -43,7 +43,7 @@ int CHiscore::Init()
 				atoi(subtexture_node->first_attribute("y")->value()),
 				atoi(subtexture_node->first_attribute("width")->value()),
 				atoi(subtexture_node->first_attribute("height")->value()),
-				200, 200);
+				220, 150);
 		}
 		if (!strcmp(subtexture_node->first_attribute("name")->value(), "metalPanel_plate.png"))
 		{
@@ -51,7 +51,7 @@ int CHiscore::Init()
 				atoi(subtexture_node->first_attribute("y")->value()),
 				atoi(subtexture_node->first_attribute("width")->value()),
 				atoi(subtexture_node->first_attribute("height")->value()),
-				220, 255);
+				240, 205);
 		}
 	}
 
@@ -66,8 +66,17 @@ int CHiscore::Render()
 {
 	if (GSPRITE)
 	{
-		GSPRITE->Draw(m_texUIpack.GetTexture(), &m_panMetal._srcRect, nullptr, 0, &m_panMetal._pos, &D3DXVECTOR2(2.0f, 2.0f), D3DXCOLOR(1, 1, 1, 1));
-		GSPRITE->Draw(m_texUIpack.GetTexture(), &m_panPlate._srcRect, nullptr, 0, &m_panPlate._pos, &D3DXVECTOR2(1.5f, 1.5f), D3DXCOLOR(1, 1, 1, 1));
+		GSPRITE->Draw(m_texUIpack.GetTexture(), &m_panMetal._srcRect, nullptr, 0, &m_panMetal._pos, &D3DXVECTOR2(2.5f, 3.5f), D3DXCOLOR(1, 1, 1, 1));
+		GSPRITE->Draw(m_texUIpack.GetTexture(), &m_panPlate._srcRect, nullptr, 0, &m_panPlate._pos, &D3DXVECTOR2(2.6f, 3.15f), D3DXCOLOR(1, 1, 1, 1));
+	}
+	else
+		return -1;
+
+	RECT rc;
+	if (GFONT)
+	{
+		::SetRect(&rc, 300, 165, 400, 215);
+		GFONT->DrawText(NULL, "- ¼øÀ§ -", -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
 	}
 	else
 		return -1;
