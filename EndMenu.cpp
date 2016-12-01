@@ -32,12 +32,64 @@ int CEndMenu::Init()
 	strcat_s(strbuf, 80, scrBuf);
 	strcpy_s(m_strMsg, 80, strbuf);
 
-	//fix : use xml
-	m_panMetal = Panel(200, 200, 100, 100, 200, 200);
-	m_panPlate = Panel(301, 212, 79, 80, 220, 255);
+	//setting panels and buttons using xml
+	rapidxml::xml_document<> doc;
+	rapidxml::xml_node<> * root_node;
 
-	m_btnNew = Button(200, 500, 100, 100, 240, 245);
-	m_btnRank = Button(300, 800, 100, 100, 460, 245);
+	std::ifstream fileUI("texture/uipackSpace_sheet.xml");	//read the xml file into a vector
+	std::vector<char> bufferUI((std::istreambuf_iterator<char>(fileUI)), std::istreambuf_iterator<char>());
+	bufferUI.push_back('\0');
+
+	doc.parse<0>(&bufferUI[0]);	//parse the buffer using the xml file parsing library into doc
+	root_node = doc.first_node("TextureAtlas");	//find our root node
+
+	//iterate over the subtexture
+	for (rapidxml::xml_node<> * subtexture_node = root_node->first_node("SubTexture"); subtexture_node; subtexture_node = subtexture_node->next_sibling())
+	{
+		if (!strcmp(subtexture_node->first_attribute("name")->value(), "metalPanel.png"))
+		{
+			m_panMetal = Panel(atoi(subtexture_node->first_attribute("x")->value()),
+				atoi(subtexture_node->first_attribute("y")->value()),
+				atoi(subtexture_node->first_attribute("width")->value()),
+				atoi(subtexture_node->first_attribute("height")->value()),
+				200, 200);
+		}
+		if (!strcmp(subtexture_node->first_attribute("name")->value(), "metalPanel_plate.png"))
+		{
+			m_panPlate = Panel(atoi(subtexture_node->first_attribute("x")->value()),
+				atoi(subtexture_node->first_attribute("y")->value()),
+				atoi(subtexture_node->first_attribute("width")->value()),
+				atoi(subtexture_node->first_attribute("height")->value()),
+				220, 255);
+		}
+	}
+
+	//read and parse xml the same way above
+	std::ifstream fileBut("texture/sheet_white2x.xml");
+	std::vector<char> bufferBut((std::istreambuf_iterator<char>(fileBut)), std::istreambuf_iterator<char>());
+	bufferBut.push_back('\0');
+	doc.parse<0>(&bufferBut[0]);
+	root_node = doc.first_node("TextureAtlas");
+
+	for (rapidxml::xml_node<> * subtexture_node = root_node->first_node("SubTexture"); subtexture_node; subtexture_node = subtexture_node->next_sibling())
+	{
+		if (!strcmp(subtexture_node->first_attribute("name")->value(), "return.png"))
+		{
+			m_btnNew = Button(atoi(subtexture_node->first_attribute("x")->value()),
+				atoi(subtexture_node->first_attribute("y")->value()),
+				atoi(subtexture_node->first_attribute("width")->value()),
+				atoi(subtexture_node->first_attribute("height")->value()),
+				260, 245);
+		}
+		if (!strcmp(subtexture_node->first_attribute("name")->value(), "leaderboardsComplex.png"))
+		{
+			m_btnRank = Button(atoi(subtexture_node->first_attribute("x")->value()),
+				atoi(subtexture_node->first_attribute("y")->value()),
+				atoi(subtexture_node->first_attribute("width")->value()),
+				atoi(subtexture_node->first_attribute("height")->value()),
+				440, 245);
+		}
+	}
 
 	return 0;
 }
@@ -59,11 +111,6 @@ int CEndMenu::ProcessInput()
 		return 0;
 }
 
-int CEndMenu::Update()
-{
-	return 0;
-}
-
 int CEndMenu::Render()
 {
 	if (GSPRITE)
@@ -81,9 +128,9 @@ int CEndMenu::Render()
 	{
 		::SetRect(&rc, 240, 220, 640, 300);
 		GFONT->DrawText(NULL, m_strMsg, -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
-		::SetRect(&rc, 250, 340, 380, 370);
+		::SetRect(&rc, 270, 340, 370, 370);
 		GFONT->DrawText(NULL, "새 게임", -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
-		::SetRect(&rc, 485, 340, 585, 370);
+		::SetRect(&rc, 465, 340, 565, 370);
 		GFONT->DrawText(NULL, "순위", -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
 	}
 	else

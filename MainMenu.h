@@ -13,8 +13,8 @@ public:
 	void Destroy();
 
 	int ProcessInput();
-	int Update();
 	int Render();
+	int Update() {return 0;};
 
 private:
 	CGameTexture m_texUIpack;

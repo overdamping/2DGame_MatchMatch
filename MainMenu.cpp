@@ -23,20 +23,18 @@ int CMainMenu::Init()
 	if (FAILED(m_texButtons.Create(GDEVICE, "texture/sheet_white2x.png")))
 		return -1;
 
-	//fix : use xml
+	//setting panels and buttons using xml
 	rapidxml::xml_document<> doc;
 	rapidxml::xml_node<> * root_node;
 
-	// Read the xml file into a vector
-	std::ifstream theFile("texture/uipackSpace_sheet.xml");
-	std::vector<char> bufferUI((std::istreambuf_iterator<char>(theFile)), std::istreambuf_iterator<char>());
+	std::ifstream fileUI("texture/uipackSpace_sheet.xml");	//read the xml file into a vector
+	std::vector<char> bufferUI((std::istreambuf_iterator<char>(fileUI)), std::istreambuf_iterator<char>());
 	bufferUI.push_back('\0');
 
-	// Parse the buffer using the xml file parsing library into doc 
-	doc.parse<0>(&bufferUI[0]);
-	// Find our root node
-	root_node = doc.first_node("TextureAtlas");
-	// Iterate over the subtexture
+	doc.parse<0>(&bufferUI[0]);	//parse the buffer using the xml file parsing library into doc 
+	root_node = doc.first_node("TextureAtlas");	//find our root node
+
+	//iterate over the subtexture
 	for (rapidxml::xml_node<> * subtexture_node = root_node->first_node("SubTexture"); subtexture_node; subtexture_node = subtexture_node->next_sibling())
 	{
 		if (!strcmp(subtexture_node->first_attribute("name")->value(), "metalPanel.png"))
@@ -57,16 +55,14 @@ int CMainMenu::Init()
 		}
 	}
 
-	doc.clear();
-	theFile.clear();
-
-	std::ifstream theFile2("texture/sheet_white2x.xml");
-	std::vector<char> bufferBut((std::istreambuf_iterator<char>(theFile2)), std::istreambuf_iterator<char>());
+	//read and parse xml file the same way above
+	std::ifstream fileBut("texture/sheet_white2x.xml");
+	std::vector<char> bufferBut((std::istreambuf_iterator<char>(fileBut)), std::istreambuf_iterator<char>());
 	bufferBut.push_back('\0');
+
 	doc.parse<0>(&bufferBut[0]);
 	root_node = doc.first_node("TextureAtlas");
 
-	// Iterate over the subtexture
 	for (rapidxml::xml_node<> * subtexture_node = root_node->first_node("SubTexture"); subtexture_node; subtexture_node = subtexture_node->next_sibling())
 	{
 		if (!strcmp(subtexture_node->first_attribute("name")->value(), "return.png"))
@@ -115,11 +111,6 @@ int CMainMenu::ProcessInput()	//process mouse input (left button click)
 		MessageBox(GetActiveWindow(), "Rank!", "Rank!", 0);
 	else
 		return 0;
-}
-
-int CMainMenu::Update()
-{
-	return 0;
 }
 
 int CMainMenu::Render()
