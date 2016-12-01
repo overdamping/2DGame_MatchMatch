@@ -30,17 +30,21 @@ int CEndMenu::Init()
 	char scrBuf[20];
 	_itoa_s(score, scrBuf, 20, 10);
 	strcat_s(strbuf, 80, scrBuf);
+	strcat_s(strbuf, 80, "Á¡");
 	strcpy_s(m_strMsg, 80, strbuf);
 
 	//setting panels and buttons using xml
 	rapidxml::xml_document<> doc;
 	rapidxml::xml_node<> * root_node;
 
-	std::ifstream fileUI("texture/uipackSpace_sheet.xml");	//read the xml file into a vector
+	//read the xml file into a vector
+	std::ifstream fileUI("texture/uipackSpace_sheet.xml");
+	if (fileUI.fail()) return -1;
 	std::vector<char> bufferUI((std::istreambuf_iterator<char>(fileUI)), std::istreambuf_iterator<char>());
 	bufferUI.push_back('\0');
 
-	doc.parse<0>(&bufferUI[0]);	//parse the buffer using the xml file parsing library into doc
+	//parse the buffer using the xml file parsing library into doc
+	doc.parse<0>(&bufferUI[0]);	
 	root_node = doc.first_node("TextureAtlas");	//find our root node
 
 	//iterate over the subtexture
@@ -66,8 +70,10 @@ int CEndMenu::Init()
 
 	//read and parse xml the same way above
 	std::ifstream fileBut("texture/sheet_white2x.xml");
+	if (fileBut.fail()) return -1;
 	std::vector<char> bufferBut((std::istreambuf_iterator<char>(fileBut)), std::istreambuf_iterator<char>());
 	bufferBut.push_back('\0');
+
 	doc.parse<0>(&bufferBut[0]);
 	root_node = doc.first_node("TextureAtlas");
 

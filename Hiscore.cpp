@@ -27,14 +27,17 @@ int CHiscore::Init()
 	rapidxml::xml_document<> doc;
 	rapidxml::xml_node<> * root_node;
 
-	std::ifstream fileUI("texture/uipackSpace_sheet.xml");	//read the xml file into a vector
+	//read the xml file into a vector
+	std::ifstream fileUI("texture/uipackSpace_sheet.xml");	
+	if (fileUI.fail()) return -1;
 	std::vector<char> bufferUI((std::istreambuf_iterator<char>(fileUI)), std::istreambuf_iterator<char>());
 	bufferUI.push_back('\0');
 
-	doc.parse<0>(&bufferUI[0]);	//parse the buffer using the xml file parsing library into doc
+	//parse the buffer using the xml file parsing library into doc
+	doc.parse<0>(&bufferUI[0]);	
 	root_node = doc.first_node("TextureAtlas");	//find our root node
 
-												//iterate over the subtexture
+	//iterate over the subtexture
 	for (rapidxml::xml_node<> * subtexture_node = root_node->first_node("SubTexture"); subtexture_node; subtexture_node = subtexture_node->next_sibling())
 	{
 		if (!strcmp(subtexture_node->first_attribute("name")->value(), "metalPanel.png"))
