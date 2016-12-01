@@ -106,7 +106,7 @@ int CEndMenu::ProcessInput()
 	if (PtInRect(&m_btnNew._btnRect, pt))
 		SendMessage(GetActiveWindow(), WM_NEW_GAME, 0, 0);
 	else if (PtInRect(&m_btnRank._btnRect, pt))
-		MessageBox(GetActiveWindow(), "Rank!", "Rank!", 0);
+		SendMessage(GetActiveWindow(), WM_HISCORE, 0, 0);
 	else
 		return 0;
 }

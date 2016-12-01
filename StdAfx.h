@@ -28,6 +28,7 @@
 #include "GamePlay.h"
 #include "MainMenu.h"
 #include "EndMenu.h"
+#include "Hiscore.h"
 #include "Main.h"
 
 #define SCREEN_WIDTH		800
@@ -47,5 +48,6 @@
 #define WM_NEW_GAME			(WM_APP + 0x0001)
 #define WM_RESUME_GAME		(WM_APP + 0x0002)
 #define	WM_GAME_WON			(WM_APP + 0X0003)
+#define WM_HISCORE			(WM_APP + 0X0004)
 
 #endif

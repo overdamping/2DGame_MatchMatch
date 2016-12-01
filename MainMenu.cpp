@@ -108,7 +108,7 @@ int CMainMenu::ProcessInput()	//process mouse input (left button click)
 	else if (PtInRect(&m_btnResume._btnRect, pt))
 		SendMessage(GetActiveWindow(), WM_RESUME_GAME, 0, 0);
 	else if (PtInRect(&m_btnRank._btnRect, pt))
-		MessageBox(GetActiveWindow(), "Rank!", "Rank!", 0);
+		SendMessage(GetActiveWindow(), WM_HISCORE, 0, 0);
 	else
 		return 0;
 }

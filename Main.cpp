@@ -4,7 +4,7 @@
 #pragma once
 #include "StdAfx.h"
 
-CMain::CMain() :m_pSprite(nullptr), m_pFont(nullptr), m_pGameScene(nullptr), m_pMainMenu(nullptr), m_pEndMenu(nullptr), m_pGameInput(nullptr), m_pCamera(nullptr)
+CMain::CMain() :m_pSprite(nullptr), m_pFont(nullptr), m_pGameScene(nullptr), m_pMainMenu(nullptr), m_pEndMenu(nullptr), m_pHiscore(nullptr), m_pGameInput(nullptr), m_pCamera(nullptr)
 {
 	
 }
@@ -19,7 +19,8 @@ int CMain::Init()
 {
 	//create and initialize game play scene, main menu, input object
 	SAFE_INIT(m_pGameScene, CGamePlay);							
-	SAFE_INIT(m_pMainMenu, CMainMenu);							
+	SAFE_INIT(m_pMainMenu, CMainMenu);
+	SAFE_INIT(m_pHiscore, CHiscore);
 	SAFE_INIT(m_pGameInput, CGameInput);						 
 
 	if (!m_pSprite)
@@ -74,6 +75,7 @@ void CMain::Destroy()
 	}
 	SAFE_DELEETE(m_pGameScene);
 	SAFE_DELEETE(m_pMainMenu);
+	SAFE_DELEETE(m_pHiscore);
 	SAFE_RELEASE(m_pFont);
 	SAFE_DELEETE(m_pSprite);
 	SAFE_DELEETE(m_pGameInput);
@@ -198,6 +200,11 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			menus.push(std::unique_ptr<IGameScene>(m_pEndMenu));
 			assert(menus.top().get() == m_pEndMenu);
 			return 0;
+		case WM_HISCORE:
+			assert(m_pHiscore);
+			menus.push(std::unique_ptr<IGameScene>(m_pHiscore));
+			assert(menus.top().get() == m_pHiscore);
+			return -1;
 	}
 
 	return CD3DApp::MsgProc(hWnd, msg, wParam, lParam);

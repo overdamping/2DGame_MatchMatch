@@ -21,6 +21,7 @@ private:
 	IGameScene*		m_pGameScene;
 	IGameScene* 	m_pMainMenu;
 	IGameScene*		m_pEndMenu;
+	IGameScene*		m_pHiscore;
 	std::stack<std::unique_ptr<IGameScene>> menus;
 
 	LPD3DXFONT		m_pFont;
