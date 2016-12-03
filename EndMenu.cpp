@@ -132,7 +132,7 @@ int CEndMenu::Render()
 	RECT rc;
 	if (GFONT)
 	{
-		::SetRect(&rc, 240, 220, 640, 300);
+		::SetRect(&rc, 235, 220, 640, 300);
 		GFONT->DrawText(NULL, m_strMsg, -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
 		::SetRect(&rc, 270, 340, 370, 370);
 		GFONT->DrawText(NULL, "ªı ∞‘¿”", -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));

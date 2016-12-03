@@ -16,6 +16,8 @@ public:
 	int Update();
 	int Render();
 	int ProcessInput();
+
+	int GetGameScore() const;
 private:
 	void CreateCards();
 
@@ -23,7 +25,6 @@ private:
 	CGameTexture			m_texBackground;	//Background texture
 	CGameTexture			m_texCard[9];		//Card textures
 	CCard					m_cards[16];		//Card objects
-	CScoreBoard				m_gameScore;		//Game Score board
 
 	//indices for pair matching
 	int ndxFirstClk;
@@ -33,5 +34,6 @@ private:
 	float m_fTimeEnd;
 
 	int cntMatchedPair;
+	int cntAttemps;
 };
 

@@ -7,3 +7,5 @@ MainMenu.cpp~RF1fcb83d2.TMP
 font/
 rapidxml-1.13/
 texture/
+ScoreBoard.cpp
+ScoreBoard.h

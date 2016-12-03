@@ -33,14 +33,12 @@ int CGamePlay::Init()
 	//Card objects creation
 	CreateCards();
 
-	//Score board creation
-	m_gameScore.Create(590, 35, 215, 30);
-
 	//setting indices
 	ndxFirstClk = -1;
 	ndxSecondClk = -1;
 
 	cntMatchedPair = 0;
+	cntAttemps = 0;
 
 	return 0;
 }
@@ -85,9 +83,17 @@ int CGamePlay::Render()
 	}
 	else
 		return -1;
-
+	
 	//Game Score rendering
-	if (FAILED(m_gameScore.Render()))
+	RECT rc = {600, 35, 800, 60};
+	char strBuf[80] = "Attemps : ";
+	char scrBuf[20];
+	_itoa_s(cntAttemps, scrBuf, 20, 10);
+	strcat_s(strBuf, scrBuf);
+
+	if (GFONT)
+		GFONT->DrawText(NULL, strBuf, -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
+	else
 		return -1;
 
 	return 0;
@@ -121,6 +127,11 @@ int CGamePlay::ProcessInput()	//process mouse input (left button click)
 	return 0;
 }
 
+int CGamePlay::GetGameScore() const
+{
+	return cntAttemps;
+}
+
 int CGamePlay::Update()
 {
 	//Card pair matching
@@ -135,11 +146,11 @@ int CGamePlay::Update()
 				m_cards[ndxSecondClk].Found();
 				cntMatchedPair++;
 			}
-			else														//pair matching fail
+			else	//pair matching fail
 			{												
 				m_cards[ndxFirstClk].Flip(TRUE);
 				m_cards[ndxSecondClk].Flip(TRUE);
-				m_gameScore.ScoreIncrease();							//number of attemps incresed
+				cntAttemps++;	//number of attemps incresed
 			}
 			ndxFirstClk = -1;
 			ndxSecondClk = -1;
@@ -148,7 +159,7 @@ int CGamePlay::Update()
 
 	//Game won : All card pairs are matched
 	if (cntMatchedPair == 8)
-		SendMessage(GetActiveWindow(), WM_GAME_WON, m_gameScore.GetGameScore(), 0);
+		SendMessage(GetActiveWindow(), WM_GAME_WON, cntAttemps, 0);
 
 	return 0;
 }
