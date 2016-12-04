@@ -192,13 +192,15 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		case WM_GAME_WON:			//won the game
 			if ((m_pEndMenu) == nullptr)	//create and show end menu with final score														
 			{																			
-				m_pEndMenu = new CEndMenu(wParam);
+				m_pEndMenu = new CEndMenu();
 				if (m_pEndMenu)
 					assert(!FAILED(m_pEndMenu->Init()));
 			}	
 			assert(menus.empty());
+			dynamic_cast<CEndMenu*>(m_pEndMenu)->SetFinalScore(wParam);
 			menus.push(std::unique_ptr<IGameScene>(m_pEndMenu));
 			assert(menus.top().get() == m_pEndMenu);
+			dynamic_cast<CHiscore*>(m_pHiscore)->UpdateRecord(wParam);
 			return 0;
 		case WM_HISCORE:
 			assert(m_pHiscore);

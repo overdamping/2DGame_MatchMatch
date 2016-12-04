@@ -6,7 +6,7 @@
 class CEndMenu : public IGameScene
 {
 public:
-	CEndMenu(int finalScore);
+	CEndMenu();
 	~CEndMenu();
 
 	int Init();
@@ -16,8 +16,8 @@ public:
 	int Render();
 	int Update()	{return 0;};
 
+	void SetFinalScore(int score);
 private:
-	int score;
 	char* m_strMsg;
 	CGameTexture m_texUIpack;
 	CGameTexture m_texButtons;

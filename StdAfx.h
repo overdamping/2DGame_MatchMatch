@@ -14,6 +14,7 @@
 #include <memory>
 #include <cassert>
 #include <fstream>
+#include <algorithm>
 #include "rapidxml-1.13\rapidxml.hpp"
 
 #include "Util.h"
@@ -23,7 +24,6 @@
 #include "GameInput.h"
 #include "CCamera.h"
 #include "Card.h"
-#include "ScoreBoard.h"
 #include "GameScene.h"
 #include "GamePlay.h"
 #include "MainMenu.h"

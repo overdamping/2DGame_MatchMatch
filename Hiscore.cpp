@@ -15,6 +15,13 @@ CHiscore::~CHiscore()
 
 int CHiscore::Init()
 {
+	//read score records from file
+	std::ifstream inFile;
+	inFile.open("records.txt", std::ios::in | std::ios::binary);
+	if (inFile.fail()) return -1;
+	inFile.read((char*)&records, sizeof(records));
+	inFile.close();
+
 	//UI texture creation
 	if (FAILED(m_texUIpack.Create(GDEVICE, "texture/uipackSpace_sheet.png")))
 		return -1;
@@ -32,6 +39,7 @@ int CHiscore::Init()
 	if (fileUI.fail()) return -1;
 	std::vector<char> bufferUI((std::istreambuf_iterator<char>(fileUI)), std::istreambuf_iterator<char>());
 	bufferUI.push_back('\0');
+	fileUI.close();
 
 	//parse the buffer using the xml file parsing library into doc
 	doc.parse<0>(&bufferUI[0]);	
@@ -46,7 +54,7 @@ int CHiscore::Init()
 				atoi(subtexture_node->first_attribute("y")->value()),
 				atoi(subtexture_node->first_attribute("width")->value()),
 				atoi(subtexture_node->first_attribute("height")->value()),
-				220, 150);
+				200, 150);
 		}
 		if (!strcmp(subtexture_node->first_attribute("name")->value(), "metalPanel_plate.png"))
 		{
@@ -54,7 +62,7 @@ int CHiscore::Init()
 				atoi(subtexture_node->first_attribute("y")->value()),
 				atoi(subtexture_node->first_attribute("width")->value()),
 				atoi(subtexture_node->first_attribute("height")->value()),
-				240, 205);
+				220, 205);
 		}
 	}
 
@@ -63,6 +71,11 @@ int CHiscore::Init()
 
 void CHiscore::Destroy()
 {
+	//write score records to file
+	std::ofstream outFile;
+	outFile.open("records.txt", std::ios::out | std::ios::binary);
+	outFile.write((char*)&records, sizeof(records));
+	outFile.close();
 }
 
 int CHiscore::Render()
@@ -78,11 +91,35 @@ int CHiscore::Render()
 	RECT rc;
 	if (GFONT)
 	{
-		::SetRect(&rc, 300, 165, 400, 215);
+		::SetRect(&rc, 280, 165, 400, 215);
 		GFONT->DrawText(NULL, "- 순위 -", -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
+		
+		int posY = 220;
+		char strBuf[20];
+		char scrBuf[10];
+
+		for (int i = 0; i < 5; i++)
+		{
+			::SetRect(&rc, 230, posY, 230 + 200, posY + 30);
+			sprintf_s(strBuf, "%d위 ", i + 1);
+			_itoa_s(records[i], scrBuf, sizeof(scrBuf), 10);
+			strcat_s(strBuf, scrBuf);
+			strcat_s(strBuf, "점");
+			posY += 50;
+			GFONT->DrawText(NULL, strBuf, -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
+		}
 	}
 	else
 		return -1;
 
 	return 0;
+}
+
+void CHiscore::UpdateRecord(int score)
+{
+	if (score < records[4])
+	{
+		records[4] = score;
+		std::sort(records, records + 5);
+	}
 }

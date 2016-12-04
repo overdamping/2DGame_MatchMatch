@@ -3,9 +3,8 @@
 //-----------------------------------------------------------------------------
 #include "StdAfx.h"
 
-CEndMenu::CEndMenu(int finalScore)
+CEndMenu::CEndMenu()
 {
-	score = finalScore;
 }
 
 
@@ -26,12 +25,6 @@ int CEndMenu::Init()
 
 	//message creation
 	m_strMsg = new char[80];
-	char strbuf[80] = "축하합니다! 당신의 점수는 ";
-	char scrBuf[20];
-	_itoa_s(score, scrBuf, 20, 10);
-	strcat_s(strbuf, 80, scrBuf);
-	strcat_s(strbuf, 80, "점");
-	strcpy_s(m_strMsg, 80, strbuf);
 
 	//setting panels and buttons using xml
 	rapidxml::xml_document<> doc;
@@ -41,6 +34,7 @@ int CEndMenu::Init()
 	std::ifstream fileUI("texture/uipackSpace_sheet.xml");
 	if (fileUI.fail()) return -1;
 	std::vector<char> bufferUI((std::istreambuf_iterator<char>(fileUI)), std::istreambuf_iterator<char>());
+	fileUI.close();
 	bufferUI.push_back('\0');
 
 	//parse the buffer using the xml file parsing library into doc
@@ -72,6 +66,7 @@ int CEndMenu::Init()
 	std::ifstream fileBut("texture/sheet_white2x.xml");
 	if (fileBut.fail()) return -1;
 	std::vector<char> bufferBut((std::istreambuf_iterator<char>(fileBut)), std::istreambuf_iterator<char>());
+	fileBut.close();
 	bufferBut.push_back('\0');
 
 	doc.parse<0>(&bufferBut[0]);
@@ -113,8 +108,8 @@ int CEndMenu::ProcessInput()
 		SendMessage(GetActiveWindow(), WM_NEW_GAME, 0, 0);
 	else if (PtInRect(&m_btnRank._btnRect, pt))
 		SendMessage(GetActiveWindow(), WM_HISCORE, 0, 0);
-	else
-		return 0;
+
+	return 0;
 }
 
 int CEndMenu::Render()
@@ -132,7 +127,7 @@ int CEndMenu::Render()
 	RECT rc;
 	if (GFONT)
 	{
-		::SetRect(&rc, 235, 220, 640, 300);
+		::SetRect(&rc, 225, 220, 640, 300);
 		GFONT->DrawText(NULL, m_strMsg, -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
 		::SetRect(&rc, 270, 340, 370, 370);
 		GFONT->DrawText(NULL, "새 게임", -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
@@ -142,4 +137,14 @@ int CEndMenu::Render()
 	else
 		return -1;
 	return 0;
+}
+
+void CEndMenu::SetFinalScore(int score)
+{
+	char strbuf[80] = "축하합니다! 당신의 점수는 ";
+	char scrBuf[20];
+	_itoa_s(score, scrBuf, 20, 10);
+	strcat_s(strbuf, 80, scrBuf);
+	strcat_s(strbuf, 80, "점");
+	strcpy_s(m_strMsg, 80, strbuf);
 }

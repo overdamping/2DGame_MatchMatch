@@ -31,6 +31,7 @@ int CMainMenu::Init()
 	std::ifstream fileUI("texture/uipackSpace_sheet.xml");	
 	if (fileUI.fail()) return -1;
 	std::vector<char> bufferUI((std::istreambuf_iterator<char>(fileUI)), std::istreambuf_iterator<char>());
+	fileUI.close();
 	bufferUI.push_back('\0');
 
 	//parse the buffer using the xml file parsing library into doc 
@@ -62,6 +63,7 @@ int CMainMenu::Init()
 	std::ifstream fileBut("texture/sheet_white2x.xml");
 	if (fileBut.fail()) return -1;
 	std::vector<char> bufferBut((std::istreambuf_iterator<char>(fileBut)), std::istreambuf_iterator<char>());
+	fileBut.close();
 	bufferBut.push_back('\0');
 
 	doc.parse<0>(&bufferBut[0]);
@@ -113,8 +115,8 @@ int CMainMenu::ProcessInput()	//process mouse input (left button click)
 		SendMessage(GetActiveWindow(), WM_RESUME_GAME, 0, 0);
 	else if (PtInRect(&m_btnRank._btnRect, pt))
 		SendMessage(GetActiveWindow(), WM_HISCORE, 0, 0);
-	else
-		return 0;
+
+	return 0;
 }
 
 int CMainMenu::Render()

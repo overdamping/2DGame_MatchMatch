@@ -127,11 +127,6 @@ int CGamePlay::ProcessInput()	//process mouse input (left button click)
 	return 0;
 }
 
-int CGamePlay::GetGameScore() const
-{
-	return cntAttemps;
-}
-
 int CGamePlay::Update()
 {
 	//Card pair matching

@@ -17,7 +17,7 @@ public:
 	int Render();
 	int ProcessInput();
 
-	int GetGameScore() const;
+	int GetGameScore() const {return cntAttemps;};
 private:
 	void CreateCards();
 
