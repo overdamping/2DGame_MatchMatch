@@ -34,9 +34,9 @@ int CMainMenu::Init()
 	fileUI.close();
 	bufferUI.push_back('\0');
 
-	//parse the buffer using the xml file parsing library into doc 
+	//parse the buffer into doc using xml parsing library 
 	doc.parse<0>(&bufferUI[0]);	
-	root_node = doc.first_node("TextureAtlas");	//find our root node
+	root_node = doc.first_node("TextureAtlas");	//find out root node
 
 	//iterate over the subtexture
 	for (rapidxml::xml_node<> * subtexture_node = root_node->first_node("SubTexture"); subtexture_node; subtexture_node = subtexture_node->next_sibling())

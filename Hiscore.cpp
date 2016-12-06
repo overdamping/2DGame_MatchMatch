@@ -41,9 +41,9 @@ int CHiscore::Init()
 	bufferUI.push_back('\0');
 	fileUI.close();
 
-	//parse the buffer using the xml file parsing library into doc
+	//parse the buffer into doc using xml parsing library 
 	doc.parse<0>(&bufferUI[0]);	
-	root_node = doc.first_node("TextureAtlas");	//find our root node
+	root_node = doc.first_node("TextureAtlas");	//find out root node
 
 	//iterate over the subtexture
 	for (rapidxml::xml_node<> * subtexture_node = root_node->first_node("SubTexture"); subtexture_node; subtexture_node = subtexture_node->next_sibling())
@@ -71,7 +71,7 @@ int CHiscore::Init()
 
 void CHiscore::Destroy()
 {
-	//write score records to file
+	//write updated score records to the file
 	std::ofstream outFile;
 	outFile.open("records.txt", std::ios::out | std::ios::binary);
 	outFile.write((char*)&records, sizeof(records));
@@ -80,6 +80,7 @@ void CHiscore::Destroy()
 
 int CHiscore::Render()
 {
+	//render panels
 	if (GSPRITE)
 	{
 		GSPRITE->Draw(m_texUIpack.GetTexture(), &m_panMetal._srcRect, nullptr, 0, &m_panMetal._pos, &D3DXVECTOR2(2.5f, 3.5f), D3DXCOLOR(1, 1, 1, 1));
@@ -94,18 +95,19 @@ int CHiscore::Render()
 		::SetRect(&rc, 280, 165, 400, 215);
 		GFONT->DrawText(NULL, "- 순위 -", -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
 		
-		int posY = 220;
+		int posY;
 		char strBuf[20];
 		char scrBuf[10];
 
+		//render score ranking
 		for (int i = 0; i < 5; i++)
 		{
+			posY = 220 + (50 * i);
 			::SetRect(&rc, 230, posY, 230 + 200, posY + 30);
 			sprintf_s(strBuf, "%d위 ", i + 1);
 			_itoa_s(records[i], scrBuf, sizeof(scrBuf), 10);
 			strcat_s(strBuf, scrBuf);
 			strcat_s(strBuf, "점");
-			posY += 50;
 			GFONT->DrawText(NULL, strBuf, -1, &rc, 0, D3DXCOLOR(1, 1, 1, 1));
 		}
 	}
@@ -115,7 +117,7 @@ int CHiscore::Render()
 	return 0;
 }
 
-void CHiscore::UpdateRecord(int score)
+void CHiscore::UpdateRecord(int score)	//update record with new score
 {
 	if (score < records[4])
 	{

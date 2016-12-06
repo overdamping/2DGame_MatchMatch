@@ -17,6 +17,7 @@ public:
 	int Update()	{return 0;};
 
 	void SetFinalScore(int score);
+
 private:
 	char* m_strMsg;
 	CGameTexture m_texUIpack;

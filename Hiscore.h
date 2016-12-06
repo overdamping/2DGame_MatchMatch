@@ -24,6 +24,7 @@ private:
 	Panel m_panMetal;
 	Panel m_panPlate;
 
-	int records[5];
+	//game score records
+	int records[5];	
 };
 

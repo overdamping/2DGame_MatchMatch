@@ -14,7 +14,7 @@ struct Ray
 	D3DXVECTOR3 _direction;
 };
 
-struct TexQuad	//textured quad built from two triangles
+struct TexQuad
 {	
 	TexQuad() 
 	{
@@ -82,5 +82,6 @@ struct Panel
 	}																			\
 }
 
+//functions for mouse picking
 Ray CalcPickingRay(int screen_x, int screen_y);
 BOOL RayQuadIntersectionTest(Ray r,const CUSTOMVERTEX* quadVertices);

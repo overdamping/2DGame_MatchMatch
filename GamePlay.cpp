@@ -33,10 +33,11 @@ int CGamePlay::Init()
 	//Card objects creation
 	CreateCards();
 
-	//setting indices
+	//setting indices to -1
 	ndxFirstClk = -1;
 	ndxSecondClk = -1;
 
+	//initialize counters
 	cntMatchedPair = 0;
 	cntAttemps = 0;
 
@@ -45,23 +46,23 @@ int CGamePlay::Init()
 
 void CGamePlay::CreateCards()
 {
-	std::vector<int> tempOld = {0,1,2,3,4,5,6,7,0,1,2,3,4,5,6,7};
-	std::vector<int> tempNew(0);
-	while (!tempOld.empty())
+	std::vector<int> tmpOld = {0,1,2,3,4,5,6,7,0,1,2,3,4,5,6,7};
+	std::vector<int> tmpNew(0);
+	while (!tmpOld.empty())	
 	{
 		srand((unsigned)time(NULL));
-		int ndx = rand() % tempOld.size();
-		tempNew.insert(tempNew.end(), tempOld[ndx]);
-		tempOld.erase(tempOld.begin()+ndx);
+		int ndx = rand() % tmpOld.size();
+		tmpNew.insert(tmpNew.end(), tmpOld[ndx]);
+		tmpOld.erase(tmpOld.begin()+ndx);
 	}
 
 	for (int i = 0; i<16; i++)
 	{
-		m_cards[i].Create(tempNew[i],
-			-2.3 + (i / 4)*(INTERVAL + CARD_WIDTH),
-			-2 + (i % 4)*(INTERVAL + CARD_HEIGHT),
-			&m_texCard[tempNew[i]],
-			&m_texCard[8]);
+		m_cards[i].Create(tmpNew[i],				//card ID
+			-2.3 + (i / 4)*(INTERVAL + CARD_WIDTH),	//x position
+			-2 + (i % 4)*(INTERVAL + CARD_HEIGHT),	//y position
+			&m_texCard[tmpNew[i]],					//front face texture
+			&m_texCard[8]);							//back face taxture
 	}
 }
 
@@ -84,11 +85,11 @@ int CGamePlay::Render()
 	else
 		return -1;
 	
-	//Game Score rendering
+	//Game Score(attempts) rendering
 	RECT rc = {600, 35, 800, 60};
 	char strBuf[80] = "Attemps : ";
 	char scrBuf[20];
-	_itoa_s(cntAttemps, scrBuf, 20, 10);
+	_itoa_s(cntAttemps, scrBuf, sizeof(scrBuf), 10);
 	strcat_s(strBuf, scrBuf);
 
 	if (GFONT)
@@ -102,13 +103,13 @@ int CGamePlay::Render()
 int CGamePlay::ProcessInput()	//process mouse input (left button click)
 {
 	D3DXVECTOR3 pos = GINPUT->GetCurMousePos();
-	Ray ray = CalcPickingRay(pos.x, pos.y);		//get picking ray
+	Ray ray = CalcPickingRay(pos.x, pos.y);	//calculate picking ray
 
 	for (int ndx = 0; ndx < 16; ndx++)
 	{
 		if (RayQuadIntersectionTest(ray, m_cards[ndx].GetQuadVertices()) && !m_cards[ndx].IsFound())
 		{
-			if (ndxFirstClk == -1)								//first card clicked
+			if (ndxFirstClk == -1)	//first card clicked
 			{
 				ndxFirstClk = ndx;
 				m_cards[ndxFirstClk].Flip(FALSE);
@@ -127,13 +128,18 @@ int CGamePlay::ProcessInput()	//process mouse input (left button click)
 	return 0;
 }
 
+int CGamePlay::GetGameScore() const
+{
+	return cntAttemps;
+}
+
 int CGamePlay::Update()
 {
 	//Card pair matching
 	if (ndxSecondClk != -1)
 	{
 		m_fTimeEnd = timeGetTime() * 0.001f;
-		if (m_fTimeEnd - m_fTimeBgn >= 0.2)		//delay for 0.2sec after second card clicked
+		if (m_fTimeEnd - m_fTimeBgn >= 0.2)	//delay for 0.2sec after second card clicked
 		{
 			if (m_cards[ndxFirstClk].Equals(&m_cards[ndxSecondClk]))	//pair matching success
 			{

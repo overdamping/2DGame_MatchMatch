@@ -21,7 +21,6 @@ public:
 	BOOL IsFound() const;
 	void Flip(BOOL st);
 	void Found();
-
 	const CUSTOMVERTEX* GetQuadVertices();
 
 private:
@@ -29,6 +28,6 @@ private:
 	ECardState m_cardSt;
 	CGameTexture* m_pFrontFace;
 	CGameTexture* m_pBackFace;
-	TexQuad card;
+	TexQuad m_cardQd;
 };
 

@@ -26,11 +26,12 @@ int CCard::Create(int id, float posX, float posY, CGameTexture* pFrontFace, CGam
 	m_pBackFace = pBackFace;
 
 	//setting card position
-	card.vertices[0]._pos = D3DXVECTOR3{posX, posY, 0.0f};
-	card.vertices[1]._pos = D3DXVECTOR3{posX+CARD_WIDTH, posY, 0.0f};
-	card.vertices[2]._pos = D3DXVECTOR3{posX, posY-CARD_HEIGHT, 0.0f};
-	card.vertices[3]._pos = D3DXVECTOR3{posX+CARD_WIDTH, posY-CARD_HEIGHT, 0.0f};
+	m_cardQd.vertices[0]._pos = D3DXVECTOR3{posX, posY, 0.0f};
+	m_cardQd.vertices[1]._pos = D3DXVECTOR3{posX+CARD_WIDTH, posY, 0.0f};
+	m_cardQd.vertices[2]._pos = D3DXVECTOR3{posX, posY-CARD_HEIGHT, 0.0f};
+	m_cardQd.vertices[3]._pos = D3DXVECTOR3{posX+CARD_WIDTH, posY-CARD_HEIGHT, 0.0f};
 
+	//setting initial card state
 	m_cardSt = NOTFOUND_BACK;
 
 	return 0;
@@ -46,10 +47,12 @@ int CCard::Render()
 	else
 		GDEVICE->SetTexture(0, m_pFrontFace->GetTexture());
 
-	GDEVICE->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP,		//primitive type
-		2,												//number of primitives to render
-		card.vertices,									//user memory pointer to vertex data
-		sizeof(CUSTOMVERTEX));							//the number of bytes of data for each vertex	
+	HRESULT hr = GDEVICE->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP,	//primitive type
+		2,											//number of primitives to render
+		m_cardQd.vertices,								//user memory pointer to vertex data
+		sizeof(CUSTOMVERTEX));						//the number of bytes of data for each vertex	
+
+	if (FAILED(hr))	return -1;
 
 	GDEVICE->SetTexture(0, NULL);
 	return 0;
@@ -93,5 +96,5 @@ void CCard::Found()
 
 const CUSTOMVERTEX * CCard::GetQuadVertices()
 {
-	return card.vertices;
+	return m_cardQd.vertices;
 }

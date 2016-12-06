@@ -25,6 +25,7 @@ int CEndMenu::Init()
 
 	//message creation
 	m_strMsg = new char[80];
+	memset(m_strMsg, 0, sizeof(m_strMsg));
 
 	//setting panels and buttons using xml
 	rapidxml::xml_document<> doc;
@@ -37,11 +38,11 @@ int CEndMenu::Init()
 	fileUI.close();
 	bufferUI.push_back('\0');
 
-	//parse the buffer using the xml file parsing library into doc
+	//parse the buffer into doc using xml parsing library 
 	doc.parse<0>(&bufferUI[0]);	
-	root_node = doc.first_node("TextureAtlas");	//find our root node
+	root_node = doc.first_node("TextureAtlas");	//find out root node
 
-	//iterate over the subtexture
+	//iterate over the subtextures
 	for (rapidxml::xml_node<> * subtexture_node = root_node->first_node("SubTexture"); subtexture_node; subtexture_node = subtexture_node->next_sibling())
 	{
 		if (!strcmp(subtexture_node->first_attribute("name")->value(), "metalPanel.png"))
@@ -97,12 +98,13 @@ int CEndMenu::Init()
 
 void CEndMenu::Destroy()
 {
+	delete(m_strMsg);
 }
 
-int CEndMenu::ProcessInput()
+int CEndMenu::ProcessInput()	//process mouse input (left button click)
 {
 	D3DXVECTOR3 pos = GINPUT->GetCurMousePos();
-	POINT pt = { (LONG)pos.x,(LONG)pos.y };
+	POINT pt = {(LONG)pos.x,(LONG)pos.y};
 
 	if (PtInRect(&m_btnNew._btnRect, pt))
 		SendMessage(GetActiveWindow(), WM_NEW_GAME, 0, 0);

@@ -14,6 +14,8 @@ CCamera::~CCamera()
 
 INT CCamera::Create(LPDIRECT3DDEVICE9 pDev)
 {
+	if (pDev == nullptr) return -1;
+
 	m_vcEye = D3DXVECTOR3(0.0f, 0.0f, 10.0f);
 	m_vcLook= D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_vcUp	= D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -38,25 +40,7 @@ void CCamera::GetViewMatrix(D3DXMATRIX * v) const
 
 INT CCamera::Update()
 {
-	//if(g_pApp->m_pInput->KeyState(VK_RIGHT))
-	//{
-	//	m_vcEye.x += 1.f;
-	//}
-
-	//if(g_pApp->m_pInput->KeyState(VK_LEFT))
-	//{
-	//	m_vcEye.x -= 1.f;
-	//}
-
-	//if(g_pApp->m_pInput->KeyState(VK_UP))
-	//{
-	//	m_vcEye.y += 1.f;
-	//}
-
-	//if(g_pApp->m_pInput->KeyState(VK_DOWN))
-	//{
-	//	m_vcEye.y -= 1.f;
-	//}
+	//input processing
 
 	//setting up the view transformation
 	D3DXMatrixLookAtLH(&m_mtViw, 

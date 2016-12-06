@@ -4,9 +4,16 @@
 #pragma once
 #include "StdAfx.h"
 
-CMain::CMain() :m_pSprite(nullptr), m_pFont(nullptr), m_pGameScene(nullptr), m_pMainMenu(nullptr), m_pEndMenu(nullptr), m_pHiscore(nullptr), m_pGameInput(nullptr), m_pCamera(nullptr)
+CMain::CMain()
 {
-	
+	m_pSprite		= nullptr;
+	m_pFont			= nullptr; 
+	m_pGameScene	= nullptr;
+	m_pMainMenu		= nullptr; 
+	m_pEndMenu		= nullptr; 
+	m_pHiscore		= nullptr; 
+	m_pGameInput	= nullptr; 
+	m_pCamera		= nullptr;
 }
 
 
@@ -17,12 +24,14 @@ CMain::~CMain()
 
 int CMain::Init()
 {
-	//create and initialize game play scene, main menu, input object
+	//create and initialize play scenes, menus and input object
 	SAFE_INIT(m_pGameScene, CGamePlay);							
 	SAFE_INIT(m_pMainMenu, CMainMenu);
+	SAFE_INIT(m_pEndMenu, CEndMenu);
 	SAFE_INIT(m_pHiscore, CHiscore);
 	SAFE_INIT(m_pGameInput, CGameInput);						 
 
+	//sprite creation
 	if (!m_pSprite)
 	{
 		m_pSprite = new CGameSprite();
@@ -30,6 +39,7 @@ int CMain::Init()
 			return -1;
 	}
 
+	//camera cration
 	if (!m_pCamera)
 	{
 		m_pCamera = new CCamera();
@@ -75,6 +85,7 @@ void CMain::Destroy()
 	}
 	SAFE_DELEETE(m_pGameScene);
 	SAFE_DELEETE(m_pMainMenu);
+	SAFE_DELEETE(m_pEndMenu);
 	SAFE_DELEETE(m_pHiscore);
 	SAFE_RELEASE(m_pFont);
 	SAFE_DELEETE(m_pSprite);
@@ -84,13 +95,13 @@ void CMain::Destroy()
 
 int CMain::Update()
 {
-	if (menus.empty())
+	if (menus.empty())	//update game scene
 	{
 		SAFE_UPDATE(m_pGameScene);
 	}
 	else
 	{
-		if (FAILED(menus.top().get()->Update()))	//update current game scene
+		if (FAILED(menus.top().get()->Update()))	//update current menu
 			return -1;
 	}
 		
@@ -103,8 +114,8 @@ int CMain::Render()
 	//clear the buffer
 	m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
+	//get the view matrix
 	D3DXMATRIX mt;
-
 	if (m_pCamera)
 	{
 		m_pCamera->GetViewMatrix(&mt);
@@ -117,13 +128,14 @@ int CMain::Render()
 	if(FAILED(m_pd3dDevice->BeginScene()))
 		return -1;
 
-	//render the current game scene
+	//render the game scene
 	if (m_pGameScene)
 	{
 		if (FAILED(m_pGameScene->Render()))
 			return -1;
 	}
 
+	//if menu stack is not empty, render stack top
 	if (!menus.empty())
 	{
 		if (FAILED(menus.top().get()->Render()))	
@@ -140,15 +152,15 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch(msg)
 	{
 		case WM_KEYDOWN:
-			if (wParam == VK_ESCAPE)	//press ESC key 
+			if (wParam == VK_ESCAPE) //press ESC key 
 			{
-				if (menus.empty())	//enter main menu
+				if (menus.empty())	//if menu stack is empty, enter main menu
 				{
 					assert(m_pMainMenu);
 					menus.push(std::unique_ptr<IGameScene>(m_pMainMenu));
 					assert(menus.top().get() == m_pMainMenu);
 				}
-				else	//exit current menu(except end menu)
+				else	//exit current menu(except when it's end menu)
 				{
 					if (menus.top().get() != m_pEndMenu)
 					{
@@ -158,11 +170,11 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				}
 			}
 			return 0;
-		case WM_LBUTTONDOWN:
+		case WM_LBUTTONDOWN:	//left mouse button down
 			if(GINPUT)
 				GINPUT->LButtonDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 			return 0;
-		case WM_LBUTTONUP:
+		case WM_LBUTTONUP:		//left mouse button up
 			if (GINPUT)
 			{
 				GINPUT->LButtonUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -176,8 +188,7 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			}
 			return 0;
 		case WM_NEW_GAME:			//load new game
-			SAFE_DELEETE(m_pEndMenu);
-			menus.top().release();	//pop the main menu
+			menus.top().release();
 			menus.pop();
 			assert(menus.empty());
 			SAFE_DELEETE(m_pGameScene);
@@ -189,24 +200,18 @@ LRESULT CMain::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			menus.pop();
 			assert(menus.empty());
 			return 0;
-		case WM_GAME_WON:			//won the game
-			if ((m_pEndMenu) == nullptr)	//create and show end menu with final score														
-			{																			
-				m_pEndMenu = new CEndMenu();
-				if (m_pEndMenu)
-					assert(!FAILED(m_pEndMenu->Init()));
-			}	
+		case WM_GAME_WON:			//player won the game				
 			assert(menus.empty());
-			dynamic_cast<CEndMenu*>(m_pEndMenu)->SetFinalScore(wParam);
-			menus.push(std::unique_ptr<IGameScene>(m_pEndMenu));
+			dynamic_cast<CEndMenu*>(m_pEndMenu)->SetFinalScore(wParam);	
+			menus.push(std::unique_ptr<IGameScene>(m_pEndMenu));		//show end menu with final score
 			assert(menus.top().get() == m_pEndMenu);
-			dynamic_cast<CHiscore*>(m_pHiscore)->UpdateRecord(wParam);
+			dynamic_cast<CHiscore*>(m_pHiscore)->UpdateRecord(wParam);	//update score records
 			return 0;
-		case WM_HISCORE:
+		case WM_HISCORE:	//show ranking menu
 			assert(m_pHiscore);
-			menus.push(std::unique_ptr<IGameScene>(m_pHiscore));
+			menus.push(std::unique_ptr<IGameScene>(m_pHiscore));	
 			assert(menus.top().get() == m_pHiscore);
-			return -1;
+			return 0;
 	}
 
 	return CD3DApp::MsgProc(hWnd, msg, wParam, lParam);

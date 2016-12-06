@@ -8,11 +8,9 @@ class CGameInput
 public:
 	CGameInput();
 	~CGameInput();
-
 	int Init();
-public:
-	D3DXVECTOR3 GetCurMousePos() const;
 
+	D3DXVECTOR3 GetCurMousePos() const;
 	void LButtonDown(int posX, int posY);
 	void LButtonUp(int posX, int posY);
 	BOOL LButtonClicked() const;

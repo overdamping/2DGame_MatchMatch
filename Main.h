@@ -18,8 +18,8 @@ public:
 	virtual LRESULT MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 private:
-	IGameScene*		m_pGameScene;
-	IGameScene* 	m_pMainMenu;
+	IGameScene*		m_pGameScene;	//game play scene
+	IGameScene* 	m_pMainMenu;	
 	IGameScene*		m_pEndMenu;
 	IGameScene*		m_pHiscore;
 	std::stack<std::unique_ptr<IGameScene>> menus;
